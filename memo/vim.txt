@@ -1,0 +1,30 @@
+# ctags & cscope
+# ctags ($ sudo ctags -R) : project root directory (always)
+~$ sudo apt install ctags
+~$ cd /usr/src/{kerneldir}
+/usr/src/{kerneldir}$ sudo ctags -R
+/usr/src/{kerneldir}$ cd /usr/include
+/usr/include$ sudo ctags -R
+/usr/include$ cd ~
+~$ vim .vimrc # add "set tags=./tags,/usr/src/{kerneldir}/tags,/usr/include/tags
+
+# cscope
+~$ sudo apt install cscope
+# e.g.
+~$ cd /usr/src/{kerneldir}
+/usr/src/{kerneldir}$ mkcscope.sh # ctrl + d
+/usr/src/{kerneldir}$ cd ~
+~$ vim .vimrc
+
+# .vimrc
+set csprg=/usr/bin/cscope
+set csto=0
+set cst
+set nocsverb
+
+if filereadable("./cscope.out")
+cs add cscope.out
+else
+cs add /usr/src/{kerneldir}/cscope.out
+endif
+set csverb

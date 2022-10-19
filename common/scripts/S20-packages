@@ -1,0 +1,15 @@
+#!/bin/bash
+
+get_packages() {
+  local pkgs
+
+  pkgs="$(cat ${SET_PKG_DIR}/packages | tr " " "\n" | sort | uniq | tr "\n" " ")"
+  echo ${pkgs}
+}
+
+PKGS=$(get_packages)
+
+sudo apt-get update
+sudo apt-get install -y ${PKGS}
+
+echo "[P] setup packages... OK"

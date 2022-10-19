@@ -1,0 +1,16 @@
+[user]
+  name =
+  email =
+[color]
+  ui = auto
+[alias]
+  co = checkout
+  cy = cherry-pick
+  br = branch
+  ci = commit
+  st = status
+  logs = log --oneline --branches --graph
+[core]
+  editor = vim
+[diff]
+  submodule = log

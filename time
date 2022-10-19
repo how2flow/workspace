@@ -1,0 +1,7 @@
+#!/bin/bash
+
+SLOW="5"
+NORM="3"
+FAST="1"
+
+TIME=`date +"%Y-%m-%d-%H:%M:%S_%z"`

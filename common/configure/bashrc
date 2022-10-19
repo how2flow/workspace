@@ -1,0 +1,3 @@
+# shell options
+set -o vi
+shopt -s cdspell

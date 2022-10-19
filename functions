@@ -1,0 +1,38 @@
+#!/bin/bash
+
+SET_CFG_DIR=""
+SET_PKG_DIR=""
+SET_SRT_DIR=""
+
+ready_to_install() {
+  [ ! -d ${INSTALL_DIR}/${1} ] && mkdir -p ${INSTALL_DIR}/${1}
+  echo "${INSTALL_DIR}/${1}"
+}
+
+setup() {
+  SET_CFG_DIR="$(ready_to_install configure)"
+  SET_PKG_DIR="$(ready_to_install pkglist)"
+  SET_SRT_DIR="$(ready_to_install scripts)"
+}
+
+confirm() {
+  read -r -p "${1:-Are you sure? [Y/n]} " response
+  case ${response} in
+    [nN][oO]|[nN])
+      echo "no"
+        false
+        ;;
+    *)
+      echo "yes"
+      true
+      ;; esac
+}
+
+update_history() {
+  echo "${1}" >> "${HISTORY}"
+  date >> "${HISTORY}"
+  cat ${TMP_CFG_LIST} >> "${HISTORY}"
+  awk '!x[$0]++' "${HISTORY}" > /dev/null 2>&1
+  [ -e ${TMP_CFG_LIST} ] \
+    && rm ${TMP_CFG_LIST}
+}

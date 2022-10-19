@@ -1,0 +1,34 @@
+#!/bin/bash
+
+mkdir -p ~/opencv_files && cd ~/opencv_files
+
+wget -O opencv.zip https://github.com/opencv/opencv/archive/${VERSION}.zip
+unzip opencv.zip
+wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/${VERSION}.zip
+unzip opencv_contrib.zip
+cd opencv-${VERSION}
+
+mkdir build && cd build
+
+cmake -DCMAKE_BUILD_TYPE=RELEASE \
+  -DCMAKE_INSTALL_PREFIX=/usr/local \
+  -DINSTALL_PYTHON_EXAMPLES=ON \
+    -DOPENCV_GENERATE_PKGCONFIG=ON \
+    -DOPENCV_EXTRA_MODULES_PATH=~/opencv_files/opencv_contrib/modules \
+    -DBUILD_EXAMPLES=ON ..
+
+ # full option example
+#cmake -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=/usr/local \
+#    -DWITH_TBB=OFF -DWITH_IPP=OFF -DWITH_1394=OFF -DBUILD_WITH_DEBUG_INFO=OFF \
+#    -DBUILD_DOCS=OFF -DINSTALL_C_EXAMPLES=ON -DINSTALL_PYTHON_EXAMPLES=ON -DBUILD_EXAMPLES=OFF \
+#    -DBUILD_PACKAGE=OFF -DBUILD_TESTS=OFF -DBUILD_PERF_TESTS=OFF -DWITH_QT=OFF \
+#    -DWITH_GTK=ON -DWITH_OPENGL=ON \
+#    -DOPENCV_EXTRA_MODULES_PATH=../../opencv_contrib-3.4.5/modules -DWITH_V4L=ON\
+#    -DWITH_FFMPEG=ON -DWITH_XINE=ON -DOPENCV_ENABLE_NONFREE=ON -DBUILD_NEW_PYTHON_SUPPORT=ON \
+#    -DOPENCV_SKIP_PYTHON_LOADER=ON -DOPENCV_GENERATE_PKGCONFIG=ON \
+#    -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE \
+#    -DBUILD_opencv_python3=ON \
+#    -DPYTHON3_INCLUDE_DIR=/usr/include/python3.8 \
+#    -DPYTHON3_NUMPY_INCLUDE_DIRS=/usr/lib/python3/dist-packages/numpy/core/include/ \
+#    -DPYTHON3_PACKAGES_PATH=/usr/lib/python3/dist-packages \
+#    -DPYTHON3_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython3.8.so ..

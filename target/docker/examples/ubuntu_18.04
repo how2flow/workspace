@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [ -z "$(docker image ls | grep bionic)" ]; then
+	docker pull ubuntu:bionic
+fi
+
+docker run -it ubuntu:bionic

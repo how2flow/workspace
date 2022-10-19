@@ -1,0 +1,20 @@
+#!/bin/bash
+
+CLRURL="https://raw.githubusercontent.com/nanotech/jellybeans.vim/master/colors/jellybeans.vim"
+COLORS=jellybeans.vim
+DST_VDLURL="${HOME}/.vim/bundle/Vundle.vim"
+DST_CLRURL="/usr/share/vim/vim${VIM_VERSION}/colors"
+VDLURL="https://github.com/VundleVim/Vundle.vim.git"
+
+# vim
+sed -i 's/^\#/"/g' ${HOME}/.vimrc > /dev/null 2>&1
+echo "===== VIM PLUGIN INSTALL ====="
+sudo rm -rf ${HOME}/.vim
+git clone ${VDLURL} ${DST_VDLURL}
+mkdir -p ${HOME}/.vim/colors
+cd ${HOME}/.vim/colors
+curl -O ${CLRURL}
+sudo mv ${COLORS} ${DST_CLRURL} # need to check 'vim81'
+
+echo "===== Apply VIM ====="
+vim +PluginInstall +qall

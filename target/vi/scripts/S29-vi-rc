@@ -1,0 +1,4 @@
+#!/bin/bash
+
+[ -e ${SET_CFG_DIR}/vimrc ] \
+    && sed -i 's/^\#/"/g' ${SET_CFG_DIR}/vimrc > /dev/null 2>&1

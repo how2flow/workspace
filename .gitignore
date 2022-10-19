@@ -1,0 +1,11 @@
+# files
+*.log
+*.swp
+*.tmp
+
+# directories
+backups/
+install/
+
+# history
+history

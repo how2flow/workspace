@@ -1,0 +1,5 @@
+#!/bin/bash
+
+sudo apt-get purge libopencv* python-opencv
+sudo apt-get autoremove
+sudo find /usr/local/ -name "*opencv*" -exec rm -rf {} \;

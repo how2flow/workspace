@@ -1,0 +1,47 @@
+#!/bin/bash
+
+install_config() {
+  local conf_list=""
+  local flag=""
+
+# copy & paste original configs
+  for idx in "${CFG_DIR[@]}"; do
+    conf_list=($(ls ${idx}))
+    for config in "${conf_list[@]}"; do
+      if [ -e ${HOME}/.${config} ]; then
+        sudo cp ${HOME}/.${config} ${SET_CFG_DIR}/${config}
+      else
+        sudo cp ${idx}/${config} ${SET_CFG_DIR}/${config}
+      fi
+    done
+  done
+
+# copy & paste all configs
+  conf_list=($(ls ${SET_CFG_DIR}))
+  for idx in "${CFG_DIR[@]}"; do
+    for config in "${conf_list[@]}"; do
+      if [ ! -e ${idx}/${config} ]; then
+        continue
+      fi
+      flag="$(sed -n '1p' ${idx}/${config})"
+      [ -z "$(cat ${SET_CFG_DIR}/${config} | grep "${flag}")" ] \
+        && sudo cat ${idx}/${config} | sudo tee -a ${SET_CFG_DIR}/${config} > /dev/null 2>&1
+    done
+  done
+
+echo "install config..."
+}
+
+install_pkglist() {
+# copy & paste all pkglists
+  for idx in "${PKG_TXT[@]}"; do
+    sudo cat ${idx} | tee -a ${SET_PKG_DIR}/packages > /dev/null 2>&1
+  done
+
+echo "install pkglist..."
+}
+
+install_config
+install_pkglist
+
+echo "[I] install... OK"

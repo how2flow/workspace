@@ -1,0 +1,7 @@
+#!/bib/bash
+
+if [ ! -x $(command -v add-apt-repository) ]; then
+  sudo apt install -y software-properties-common
+fi
+
+sudo add-apt-repository ppa:deadsnakes/ppa -y

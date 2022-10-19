@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ ${VERSION} == "None" ]; then
+  VERSION=3
+fi
+
+python3 -m pip install virtualenv
+sudo apt install python${VERSION} python${VERSION}-dev

@@ -1,0 +1,81 @@
+#!/bin/bash
+
+AUTHOR="steve.jeong"
+MAIL="jkhpro1003@gmail.com"
+
+# vars
+BACKUP_DIR=${TOP_DIR}/backups
+BIN=/usr/bin
+HISTORY="${TOP_DIR}/history"
+INSTALL_DIR=${TOP_DIR}/install
+TMP_CFG_LIST=${TOP_DIR}/CONFIG_LIST.tmp
+
+# prefix
+PREFIX=()
+# directories
+CFG_DIR=()
+SRT_DIR=()
+PKG_TXT=()
+RPO_TXT=()
+
+_prefix() {
+  local foo=""
+
+  foo=$(cat /etc/*-release | grep CODENAME)
+  DISTRO=${foo##*=}
+  foo=$(cat /etc/*-release | grep VERSION)
+  OS_VER=${foo##*=}
+
+  case ${DISTRO} in
+    bionic | focal | jammy)
+      OSNAME=ubuntu
+    ;;
+    buster | bullseye | bookworm)
+      OSNAME=debian
+    ;;
+  esac
+
+  PREFIX=(
+    "${TOP_DIR}/common"
+    "${TOP_DIR}/distro/${DISTRO}/${FLAVOUR}"
+    "${TOP_DIR}/target/${TARGET}"
+  )
+
+}
+
+fix_env() {
+
+  _prefix
+
+  echo "@@@ workspace setting script @@@"
+  echo "Author:${AUTHOR}"
+  echo "E-mail:${MAIL}"
+  echo "date: ${TIME}"
+  echo ""
+
+  echo "====== ENV. ======"
+  echo "OS=${OSNAME} ${RELEASE}"
+  echo "DISTRO=${DISTRO}"
+  echo "FLAVOUR=${FLAVOUR}"
+  echo "===== PARAMS ====="
+  echo "NAME=${NAME}"
+  echo "SPEED=${SPEED}"
+  echo "TARGET=${TARGET}"
+  echo "VERSION=${VERSION}"
+  echo "=================="
+  echo ""
+
+  for idx in "${PREFIX[@]}"; do
+    [ -d ${idx}/configure ] && CFG_DIR+=("${idx}/configure")
+  done
+
+  for idx in "${PREFIX[@]}"; do
+    [ -e ${idx}/packages ] && PKG_TXT+=("${idx}/packages")
+  done
+
+  for idx in "${PREFIX[@]}"; do
+    [ -d ${idx}/scripts ] && SRT_DIR+=("${idx}/scripts")
+  done
+
+}
+

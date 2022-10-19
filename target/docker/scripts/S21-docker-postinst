@@ -1,0 +1,9 @@
+#!/bin/bash
+
+[ -z "$(cat /etc/group | grep docker)" ] \
+    && sudo groupadd docker
+
+[ -z "$(groups ${USER} | grep docker)" ] \
+    && sudo usermod -aG docker ${USER}
+
+echo "set docker group... OK"
