@@ -1,0 +1,138 @@
+#!/bin/bash
+
+vi_config() {
+  sudo cat <<__EOF >> __HOME__/.vimrc
+set shell=/bin/bash
+
+syntax on	"syntax hilight
+set hlsearch	"search hilight
+set nu	"print lines
+set autoindent
+set nocompatible
+set modeline
+"filetype indent plugin on
+set title
+set ts=4
+set sts=4
+set cindent
+"set mouse=a
+set laststatus=2
+set shiftwidth=4
+set showmatch
+set smarttab
+set smartindent
+set ruler
+set fileencodings=tuf8,euc-kr
+set clipboard=unnamedplus
+
+" mkdir -p ~/.vim/colors
+" cd ~/.vim/color
+" curl -O https://raw.githubusercontent.com/nanotech/jellybeans.vim/master/colors/jellybeans.vim
+colorscheme jellybeans
+
+"
+" About ctags & cscope
+"
+
+" set tags 
+set tags=./tags
+
+" set cscope
+set csprg=/usr/bin/cscope
+set csto=0
+set cst
+set nocsverb
+
+if has("cscope")
+	if filereadable("./cscope.out")
+		cs add cscope.out " $ mkcscope.sh
+	endif
+	set csto=0
+	set cst
+endif
+
+set csverb
+
+" cscope Hot keys
+" https://cdang.tistory.com/80
+" 
+nmap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>
+nmap <C-\>g :cs find g <C-R>=expand("<cword>")<CR><CR>
+nmap <C-\>c :cs find c <C-R>=expand("<cword>")<CR><CR>
+nmap <C-\>t :cs find t <C-R>=expand("<cword>")<CR><CR>
+nmap <C-\>e :cs find e <C-R>=expand("<cword>")<CR><CR>
+nmap <C-\>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
+nmap <C-\>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+nmap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR>
+nmap <C-\>a :cs find a <C-R>=expand("<cword>")<CR><CR>
+
+" vim plugin install check: vimawesome.com
+" vim vundle install : git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+" :PluginInstall	plugin install in .vimrc
+" :PluginList		check plugin list in .vimrc
+" :PluginClean		
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+    Plugin 'VundleVim/Vundle.vim'           "vim plugin management
+	"Plugin jellybeans: check 'https://github.com/nanotech/jellybeans.vim'
+	Plugin 'majutsushi/tagbar'
+	Plugin 'scrooloose/nerdtree'
+	Plugin 'nathanaelkane/vim-indent-guides'
+	"git
+	Plugin 'airblade/vim-gitgutter' " vim with git status(added, modified, and removed lines)
+	Plugin 'tpope/vim-fugitive' " vim with git command(e.g., Gdiff)
+	"airline
+	Plugin 'vim-airline/vim-airline'		"vim status bar
+	Plugin 'vim-airline/vim-airline-themes'	
+	"auto
+    Plugin 'AutoComplPop'                   "auto compl
+	Plugin 'taglist-plus'
+call vundle#end() "$ vim +PluginInstall +qall
+
+"
+" ctrlp.vim setting
+"
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\.git$\|public$\|log$\|tmp$\|vendor$',
+  \ 'file': '\v\.(exe|so|dll)$'
+\ }
+
+"
+" Tag list setting
+"
+let Tlist_Use_Right_Window = 1
+let Tlist_Auto_Open = 0
+let Tlist_Exit_OnlyWindow = 0
+let Tlist_Inc_Winwidth = 0
+let Tlist_Ctags_Cmd = "/usr/bin/ctags"
+
+"
+" vim-airline setting
+"
+let g:airline#extensions#tabline#enabled = 1 " turn on buffer list
+let g:airline_theme='hybrid'
+set laststatus=2 " turn on bottom bar
+let mapleader = ","
+
+"
+" hot key
+"
+map <F10> <C-w><C-v>
+map <F7> <C-w><C-w>
+
+nmap <F5> :NERDTreeToggle<cr>
+nmap <F6> :TagbarToggle<cr>
+
+nmap <F2> :bprevious<CR>
+nmap <F3> :bnext<CR>
+nmap <F4> :enew<cr>
+nmap <leader>bq :bp <BAR> bd #<CR>
+nmap <leader>bl :ls<CR>
+__EOF
+}
+
+if [ -n "$(command -v vim)" ]; then
+  [ -e __HOME__/.vimrc ] && \
+    sudo rm -rf __HOME__/.vimrc
+  vi_config
+fi

@@ -1,9 +1,0 @@
-#!/bin/bash
-
-if [ ${VERSION} == "None" ]; then
-  case ${DISTRO} in
-    bionic | focal | jammy)
-    VERSION=3.4.5
-    ;;
-  esac
-fi

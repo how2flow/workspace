@@ -1,0 +1,24 @@
+#!/bin/bash
+
+TOP_DIR=__TOP_DIR__
+
+set_venv() {
+  local v_dir=""
+
+  v_dir="$( cd "$( dirname ${TOP_DIR} )" && pwd -P )"/venv
+  if [ ! -d ${v_dir} ]; then
+    mkdir -p ${v_dir}
+    cd ${v_dir}
+    virtualenv ${NAME} --python=${VERSION}
+  else
+    cd ${v_dir}
+    if [ ! -d ${v_dir}/${NAME} ]; then
+      virtualenv ${NAME} --python=${VERSION}
+    else
+      rm -rf ${NAME}
+      virtualenv ${NAME} --python=${VERSION}
+    fi
+  fi
+}
+
+set_venv

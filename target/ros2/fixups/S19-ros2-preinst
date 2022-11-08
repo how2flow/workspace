@@ -1,0 +1,14 @@
+#!/bin/bash
+
+DISTRO=__DISTRO__
+
+case ${DISTRO} in
+  focal)
+    ;;
+  jammy)
+    sed -i 's/foxy/humble/g' __INSTALL_DIR__/packages
+    ;;
+  *)
+    echo "Not support in __OS__ __DISTRO__!"
+    ;;
+esac

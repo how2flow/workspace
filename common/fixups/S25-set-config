@@ -1,0 +1,13 @@
+#!/bin/bash
+
+setup_configs() {
+  sudo cat <<__EOF >> __HOME__/.bashrc
+# shell options
+set -o vi
+shopt -s cdspell
+__EOF
+}
+
+setup_configs
+
+echo "[C] config process... OK"

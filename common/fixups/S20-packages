@@ -1,0 +1,8 @@
+#!/bin/bash
+
+PACKAGES="$(cat __INSTALL_DIR__/packages)"
+
+sudo apt-get update && \
+  sudo apt-get install __APT_OPTIONS__ ${PACKAGES}
+
+echo "[P] setup packages... OK"

@@ -1,0 +1,35 @@
+#!/bin/bash
+
+DISTRO=__DISTRO__
+WS_DIR="$( cd "$( dirname ${TOP_DIR} )" && pwd -P )"/robot_ws
+
+build_test() {
+
+  if [ ! -d ${WS_DIR} ]; then
+    source /opt/ros/*/setup.bash
+    mkdir -p ${WS_DIR}/src
+  fi
+
+  cd ${WS_DIR}
+  colcon build --symlink-install
+}
+
+ros2_locales() {
+  sudo locale-gen en_US en_US.UTF-8
+  sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+  export LANG=en_US.UTF-8
+}
+
+ros2_python() {
+  python3 -m pip install -U -r __TOP_DIR__/target/__TARGET__/requirements
+}
+
+ros2_locales
+ros2_python
+
+sudo apt install __APT_OPTIONS__ \
+  libasio-dev \
+  libtinyxml2-dev \
+  libcunit1-dev
+
+build_test

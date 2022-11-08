@@ -1,5 +1,0 @@
-#!/bin/bash
-
-sudo rm -rf ${INSTALL_DIR}
-
-echo "COMPLETE!... 100%"

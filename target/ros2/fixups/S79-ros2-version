@@ -1,0 +1,15 @@
+#!/bin/bash
+
+DISTRO=__DISTRO__
+
+case ${DISTRO} in
+  focal)
+    sed -i 's/__ROS_DISTRO__/foxy/g' __HOME__/.bashrc
+    ;;
+  jammy)
+    sed -i 's/__ROS_DISTRO__/humble/g' __HOME__/.bashrc
+    ;;
+  *)
+    echo "Not support in __OS__ __DISTRO__!"
+    ;;
+esac

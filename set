@@ -1,4 +1,10 @@
 #!/bin/bash
+
+# Author: steve.jeong
+# e-mail: jkhpro1003@gmail.com
+# start: 2022.10.24
+# last-modified: 2022.11.10
+
 set -e
 
 # directories
@@ -7,89 +13,65 @@ TOP_DIR="$(cd $(dirname $0); pwd -P )"
 usage() {
   echo "Usage: $(basename $0) [--help] [--target=<env>]"
   echo "          [--version=<target version>]"
-  echo "          [--flavour=<platform flavour>]"
-  echo "          [--speed=<setting speed>]"
   echo "          [--name=<name>]"
   echo ""
-  echo "-h --help: print usage"
-  echo "-t --target=<env>: select setting env"
-  echo "-v --version=<target version>: target's version"
-  echo "-f --flavour=<target version>: platform's flavour"
-  echo "-s --speed=<setup speed>: .1~2 default: 1"
-  echo "-n --name=<name>: output name"
   echo ""
-  echo "e.g. setting \"vi\" env"
+  echo "    ===== options ====="
+  echo "    --help: print usage"
+  echo "    --target=<env>: select setting env"
+  echo "    --version=<target version>: target's version"
+  echo "                  e.g. python\"3.6\""
+  echo "    --name=<name>: output name"
+  echo "    ==================="
   echo ""
-  echo "$ cd workspace"
-  echo "$ ./set --target=vi"
+  echo "    e.g. setting \"vi\" env"
+  echo ""
+  echo "    $ cd workspace"
+  echo "    $ ./set --target=vi"
   exit 0
 }
 
 # option parsing
 for opt in $@; do
   case ${opt} in
-    -h|--help)
-    usage
-    ;;
-    -n=*|--name=*)
-    NAME=${opt#*=}
-    ;;
-	-f=*|--flavour=*)
-	FLAVOUR=${opt#*=}
-	;;
-    -s=*|--speed=*)
-    SPEED=${opt#*=}
-    ;;
-    -t=*|--target=*)
-    TARGET=${opt#*=}
-    ;;
-    -v=*|--version=*)
-    VERSION=${opt#*=}
-    ;;
+    --help)
+      usage
+      ;;
+    --flavour=*)
+      FLAVOUR=${opt#*=}
+      ;;
+    --name=*)
+      NAME=${opt#*=}
+      ;;
+    --speed=*)
+      SPEED=${opt#*=}
+      ;;
+    --target=*)
+      TARGET=${opt#*=}
+      ;;
+    --version=*)
+      VERSION=${opt#*=}
+      ;;
     *)
-    echo "Invalid option"
-    ;;
+      echo "Invalid option"
+      ;;
   esac
 done
 
-# includes
 . ${TOP_DIR}/time
 . ${TOP_DIR}/prefix
 . ${TOP_DIR}/functions
 
-# default options
-[ -z ${NAME} ] && NAME="base"
-[ -z ${SPEED} ] && SPEED="1"
-[ -z ${FLAVOUR} ] && FLAVOUR="server"
-[ -z ${TARGET} ] && TARGET="vi"
-[ -z ${VERSION} ] && VERSION="None"
-
-run() {
-  local list=""
-  local prog=""
-
-  fix_env
-  setup
-
-  for idx in "${SRT_DIR[@]}"; do
-    [ $(find ${idx} -type f | wc -l) != 0 ] \
-      && sudo cp ${idx}/* ${SET_SRT_DIR}
-  done
-
-  list=($(ls -A1 ${SET_SRT_DIR}))
-  for idx in "${list[@]}"; do
-    prog=${idx%%-*}
-    prog=${prog:1:2}
-    echo "processing... ${prog}%"
-    . ${SET_SRT_DIR}/${idx}
-    sleep ${SPEED}
-  done
-
-}
-
-# remove install directory
-[ -d ${INSTALL_DIR} ] && rm -rf ${INSTALL_DIR}
-
-run
+print_env
+do_preinstall
+if [ -d ${BACKUP_DIR} ]; then
+  echo "===== WARNING! There are backup files already. ====="
+  confirm "Do you still want to proceed with the backup? (Y/n)?" \
+    && do_backup
+else
+  do_backup
+fi
+echo "[INFO] complete backup before setting workspace."
+do_install
 
 # vim: set ft=sh ts=4 sw=2 sts=2 et

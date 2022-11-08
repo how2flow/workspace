@@ -1,0 +1,5 @@
+#!/bin/bash
+
+[ -d ${INSTALL_DIR} ] && rm -rf ${INSTALL_DIR}
+
+echo "COMPLETE!... 100%"

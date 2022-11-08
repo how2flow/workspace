@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if [ -x "$(command -v docker)" ]; then
+  sudo apt-get remove docker \
+                      docker-engine \
+                      docker.io \
+                      containerd \
+                      runc
+fi
+
+sudo apt-get install \
+     ca-certificates \
+     curl \
+     gnupg \
+     lsb-release
+
+[ ! -d "/etc/apt/keyrings" ] && \
+  sudo mkdir -p /etc/apt/keyrings
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg

@@ -1,38 +1,120 @@
 #!/bin/bash
 
-SET_CFG_DIR=""
-SET_PKG_DIR=""
-SET_SRT_DIR=""
-
-ready_to_install() {
-  [ ! -d ${INSTALL_DIR}/${1} ] && mkdir -p ${INSTALL_DIR}/${1}
-  echo "${INSTALL_DIR}/${1}"
-}
-
-setup() {
-  SET_CFG_DIR="$(ready_to_install configure)"
-  SET_PKG_DIR="$(ready_to_install pkglist)"
-  SET_SRT_DIR="$(ready_to_install scripts)"
-}
+# author: steve.jeong
+# date: 2022.11.09
+# dependency: . prefix
 
 confirm() {
   read -r -p "${1:-Are you sure? [Y/n]} " response
   case ${response} in
     [nN][oO]|[nN])
       echo "no"
-        false
-        ;;
+      false
+      ;;
     *)
       echo "yes"
       true
-      ;; esac
+      ;;
+  esac
 }
 
-update_history() {
-  echo "${1}" >> "${HISTORY}"
-  date >> "${HISTORY}"
-  cat ${TMP_CFG_LIST} >> "${HISTORY}"
-  awk '!x[$0]++' "${HISTORY}" > /dev/null 2>&1
-  [ -e ${TMP_CFG_LIST} ] \
-    && rm ${TMP_CFG_LIST}
+do_backup() {
+  local backup_list=""
+
+  # path of backups
+  backup_list=("${HOME}/.bashrc"
+               "${HOME}/.gitconfig"
+               "${HOME}/.tmux.conf"
+  )
+
+  # setup backup dir
+  [ ! -d ${BACKUP_DIR} ] && mkdir -p ${BACKUP_DIR}
+
+  # setup backups to install dir
+  for backup_file in ${backup_list[@]}; do
+    [ -e ${backup_file} ] && \
+      rsync -a ${backup_file} ${BACKUP_DIR}
+  done
+
+  echo "backup configs... OK"
+}
+
+do_install() {
+  local fixup_list=""
+  local prog=""
+
+  fixup_list=$(ls -A1 ${INSTALL_DIR}/fixups/*)
+  for fixup in ${fixup_list}; do
+    prog=${fixup#*fixups/}
+    prog=${prog:1:2}
+    echo "processing... ${prog}%"
+    . ${fixup}
+    sleep ${SPEED}
+  done
+
+  echo "COMPLETE!... 100%"
+}
+
+do_preinstall() {
+  local fixup_list=""
+  local pkg_list=""
+
+  # path of fixups
+  fixup_list=("${TOP_DIR}/common/fixups"
+              "${TOP_DIR}/distro/${DISTRO}/${FLAVOUR}/fixups"
+              "${TOP_DIR}/target/${TARGET}/fixups"
+  )
+
+  # path of packages
+  pkg_list=("${TOP_DIR}/common/packages"
+            "${TOP_DIR}/distro/${DISTRO}/${FLAVOUR}/packages"
+            "${TOP_DIR}/target/${TARGET}/packages"
+  )
+
+  # setup install dir
+  [ ! -d ${INSTALL_DIR} ] && mkdir -p ${INSTALL_DIR}
+
+  # setup fixups to install dir
+  for fixups in ${fixup_list[@]}; do
+    [ -d ${fixups} ] && \
+      rsync -a ${fixups} ${INSTALL_DIR}
+  done
+
+  # reconf fixups
+  fixups="$(ls -A1 ${INSTALL_DIR}/fixups/*)"
+  for fixup in ${fixups}; do
+    sed -i \
+        -e "s,__APT_OPTIONS__,$(get_apt_options),g" \
+        -e "s,__BACKUP_DIR__,${BACKUP_DIR},g" \
+        -e "s,__DISTRO__,${DISTRO},g" \
+        -e "s,__GIT_OPTIONS__,$(get_git_options),g" \
+        -e "s,__HOME__,${HOME},g" \
+        -e "s,__INSTALL_DIR__,${INSTALL_DIR},g" \
+        -e "s,__FALVOUR__,${FLAVOUR},g" \
+        -e "s,__OS__,${OS},g" \
+        -e "s,__TARGET__,${TARGET},g" \
+        -e "s,__TOP_DIR__,${TOP_DIR},g" \
+        -e "s,__VERSION__,${VERSION},g" \
+        ${fixup}
+  done
+
+  # setup packages to install dir
+  for pkgs in ${pkg_list[@]}; do
+    [ -e ${pkgs} ] && \
+      cat ${pkgs} | tee -a ${INSTALL_DIR}/packages > /dev/null
+  done
+
+  # reconf pakages
+  pkgs="$(cat ${INSTALL_DIR}/packages | tr " " "\n" | sort | uniq | tr "\n" " ")"
+  echo ${pkgs} > ${INSTALL_DIR}/packages
+
+  echo "reconfig before install... OK"
+}
+
+get_apt_options() {
+  echo "-y --no-install-recommends"
+}
+
+get_git_options() {
+  echo "--global"
 }

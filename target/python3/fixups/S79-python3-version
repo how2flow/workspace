@@ -1,0 +1,18 @@
+#!/bin/bash
+
+DISTRO=__DISTRO__
+VERSION=__VERSION__
+
+if [ ${VERSION} == "None" ]; then
+  case ${DISTRO} in
+    bionic)
+    VERSION=3.6
+    ;;
+    focal)
+    VERSION=3.8
+    ;;
+    jammy)
+    VERSION=3.10
+    ;;
+  esac
+fi

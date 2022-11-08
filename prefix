@@ -1,62 +1,46 @@
 #!/bin/bash
 
-AUTHOR="steve.jeong"
-MAIL="jkhpro1003@gmail.com"
+# author: "steve.jeong"
+# e-mail: "jkhpro1003@gmail.com"
+# date: 2022.11.10
 
 # vars
 BACKUP_DIR=${TOP_DIR}/backups
-BIN=/usr/bin
-HISTORY="${TOP_DIR}/history"
 INSTALL_DIR=${TOP_DIR}/install
-TMP_CFG_LIST=${TOP_DIR}/CONFIG_LIST.tmp
 
-# prefix
-PREFIX=()
-# directories
-CFG_DIR=()
-SRT_DIR=()
-PKG_TXT=()
-RPO_TXT=()
-
-_prefix() {
+default_options() {
   local foo=""
 
   foo=$(cat /etc/*-release | grep CODENAME)
   DISTRO=${foo##*=}
-  foo=$(cat /etc/*-release | grep VERSION)
-  OS_VER=${foo##*=}
-
   case ${DISTRO} in
     bionic | focal | jammy)
-      OSNAME=ubuntu
-    ;;
+      OS=ubuntu
+      ;;
     buster | bullseye | bookworm)
-      OSNAME=debian
-    ;;
+      OS=debian
+      ;;
   esac
-
-  PREFIX=(
-    "${TOP_DIR}/common"
-    "${TOP_DIR}/distro/${DISTRO}/${FLAVOUR}"
-    "${TOP_DIR}/target/${TARGET}"
-  )
-
+  [ -z ${FLAVOUR} ] && FLAVOUR="server"
+  [ -z ${NAME} ] && NAME="base"
+  [ -z ${SPEED} ] && SPEED="1"
+  [ -z ${TARGET} ] && TARGET="vi"
+  [ -z ${VERSION} ] && VERSION="None"
 }
 
-fix_env() {
+print_env() {
 
-  _prefix
+  default_options
 
   echo "@@@ workspace setting script @@@"
-  echo "Author:${AUTHOR}"
-  echo "E-mail:${MAIL}"
+  echo "Author:steve.jeong"
+  echo "E-mail:jkhpro1003@gmail.com"
   echo "date: ${TIME}"
   echo ""
 
   echo "====== ENV. ======"
-  echo "OS=${OSNAME} ${RELEASE}"
+  echo "OS=${OS}"
   echo "DISTRO=${DISTRO}"
-  echo "FLAVOUR=${FLAVOUR}"
   echo "===== PARAMS ====="
   echo "NAME=${NAME}"
   echo "SPEED=${SPEED}"
@@ -65,17 +49,4 @@ fix_env() {
   echo "=================="
   echo ""
 
-  for idx in "${PREFIX[@]}"; do
-    [ -d ${idx}/configure ] && CFG_DIR+=("${idx}/configure")
-  done
-
-  for idx in "${PREFIX[@]}"; do
-    [ -e ${idx}/packages ] && PKG_TXT+=("${idx}/packages")
-  done
-
-  for idx in "${PREFIX[@]}"; do
-    [ -d ${idx}/scripts ] && SRT_DIR+=("${idx}/scripts")
-  done
-
 }
-
