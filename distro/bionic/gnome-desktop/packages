@@ -1,6 +1,5 @@
 gcc
 git
-gnome-tweak-tool
 tig
 tmux
 vim-gtk3
