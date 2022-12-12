@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# wget https://raw.githubusercontent.com/jkhgit/config/ubuntu/.tmux.conf
 tmux_config() {
   sudo cat <<__EOF > __HOME__/.tmux.conf
 # prefix: 'C-b' -> 'C-a'

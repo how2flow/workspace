@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# wget https://raw.githubusercontent.com/jkhgit/config/ubuntu/.gitconfig
 git_config() {
   # user
   git config __GIT_OPTIONS__ user.name ""
@@ -17,6 +18,8 @@ git_config() {
   git config __GIT_OPTIONS__ core.editor "vim"
   # diff
   git config __GIT_OPTIONS__ diff.submodule "log"
+  # http
+  git config __GIT_OPTIONS__ http.sslVerify "false"
 }
 
 if [ -n "$(command -v git)" ]; then

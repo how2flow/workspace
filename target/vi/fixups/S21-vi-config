@@ -1,21 +1,50 @@
 #!/bin/bash
 
+# wget https://raw.githubusercontent.com/jkhgit/config/ubuntu/.vimrc
 vi_config() {
   sudo cat <<__EOF >> __HOME__/.vimrc
 set shell=/bin/bash
+filetype off
+" vim plugin install check: vimawesome.com
+" vim vundle install : git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+" :PluginInstall	plugin install in .vimrc
+" :PluginList		check plugin list in .vimrc
+" :PluginClean
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+	Plugin 'VundleVim/Vundle.vim' " vim plugin management
+	Plugin 'morhetz/gruvbox' " curl -O https://raw.githubusercontent.com/morhetz/gruvbox/master/colors/gruvbox.vim
+	" check install vim color scheme
+	Plugin 'majutsushi/tagbar'
+	Plugin 'scrooloose/nerdtree'
+	Plugin 'nathanaelkane/vim-indent-guides'
+	" git
+	Plugin 'airblade/vim-gitgutter' " vim with git status(added, modified, and removed lines)
+	Plugin 'tpope/vim-fugitive' " vim with git command(e.g., Gdiff)
+	" airline
+	Plugin 'vim-airline/vim-airline'		" vim status bar
+	Plugin 'vim-airline/vim-airline-themes'
+	" auto
+    Plugin 'AutoComplPop'                   " auto compl
+	Plugin 'taglist-plus'
+call vundle#end() "$ vim +PluginInstall +qall
+filetype plugin indent on
 
-syntax on	"syntax hilight
-set hlsearch	"search hilight
-set nu	"print lines
+set t_Co=256
+set background=dark
+colorscheme gruvbox
+
+syntax on	" syntax hilight
+set hlsearch	" search hilight
+set nu	" print lines
 set autoindent
 set nocompatible
 set modeline
-"filetype indent plugin on
 set title
 set ts=4
 set sts=4
 set cindent
-"set mouse=a
+" set mouse=a
 set laststatus=2
 set shiftwidth=4
 set showmatch
@@ -24,10 +53,6 @@ set smartindent
 set ruler
 set fileencodings=tuf8,euc-kr
 set clipboard=unnamedplus
-
-" curl -O https://raw.githubusercontent.com/morhetz/gruvbox/master/colors/gruvbox.vim
-set background=dark
-colorscheme gruvbox
 
 "
 " About ctags & cscope
@@ -64,29 +89,6 @@ nmap <C-\>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
 nmap <C-\>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
 nmap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR>
 nmap <C-\>a :cs find a <C-R>=expand("<cword>")<CR><CR>
-
-" vim plugin install check: vimawesome.com
-" vim vundle install : git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-" :PluginInstall	plugin install in .vimrc
-" :PluginList		check plugin list in .vimrc
-" :PluginClean		
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-    Plugin 'VundleVim/Vundle.vim'           "vim plugin management
-	"check install vim color scheme
-	Plugin 'majutsushi/tagbar'
-	Plugin 'scrooloose/nerdtree'
-	Plugin 'nathanaelkane/vim-indent-guides'
-	"git
-	Plugin 'airblade/vim-gitgutter' " vim with git status(added, modified, and removed lines)
-	Plugin 'tpope/vim-fugitive' " vim with git command(e.g., Gdiff)
-	"airline
-	Plugin 'vim-airline/vim-airline'		"vim status bar
-	Plugin 'vim-airline/vim-airline-themes'	
-	"auto
-    Plugin 'AutoComplPop'                   "auto compl
-	Plugin 'taglist-plus'
-call vundle#end() "$ vim +PluginInstall +qall
 
 "
 " ctrlp.vim setting
