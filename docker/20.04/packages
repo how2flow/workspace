@@ -1,0 +1,13 @@
+#!/bin/bash
+
+apt-get update && apt-get install -y --no-install-recommends \
+  build-essential \
+  cscope \
+  exuberant-ctags \
+  gcc \
+  git \
+  sudo \
+  tig \
+  tmux \
+  vim-gtk3 \
+  wget

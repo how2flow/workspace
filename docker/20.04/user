@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# https://github.com/jkhgit/docker_ws/example/docker.user
+# written by steve.jeong <jkhpro1003@gmail.com>
+
+id=$1
+
+# set root password
+echo "root:root" | chpasswd
+
+# user account
+groupadd --gid 1000 ${id} && \
+  useradd --system --create-home --home-dir /home/${id} \
+  --shell /bin/bash --gid ${id} --uid 1001 ${id}
+# --password ${id}
+# password option is just crypted in /etc/shadow.
+# It is not applied to the actual.
+
+# set sudoers
+echo "%$id ALL=(ALL) ALL" >> /etc/sudoers
+
+# set user password
+echo "$id:$id" | chpasswd
