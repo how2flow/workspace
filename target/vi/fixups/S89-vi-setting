@@ -1,7 +1,7 @@
 #!/bin/bash
 
-CLRURL="https://raw.githubusercontent.com/nanotech/jellybeans.vim/master/colors/jellybeans.vim"
-COLORS=jellybeans.vim
+CLRURL="https://raw.githubusercontent.com/morhetz/gruvbox/master/colors/gruvbox.vim"
+COLORS=gruvbox.vim
 DST_VDLURL="__HOME__/.vim/bundle/Vundle.vim"
 DST_CLRURL="/usr/share/vim/vim${VIM_VERSION}/colors"
 VDLURL="https://github.com/VundleVim/Vundle.vim.git"

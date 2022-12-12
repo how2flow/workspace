@@ -25,10 +25,9 @@ set ruler
 set fileencodings=tuf8,euc-kr
 set clipboard=unnamedplus
 
-" mkdir -p ~/.vim/colors
-" cd ~/.vim/color
-" curl -O https://raw.githubusercontent.com/nanotech/jellybeans.vim/master/colors/jellybeans.vim
-colorscheme jellybeans
+" curl -O https://raw.githubusercontent.com/morhetz/gruvbox/master/colors/gruvbox.vim
+set background=dark
+colorscheme gruvbox
 
 "
 " About ctags & cscope
@@ -74,7 +73,7 @@ nmap <C-\>a :cs find a <C-R>=expand("<cword>")<CR><CR>
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
     Plugin 'VundleVim/Vundle.vim'           "vim plugin management
-	"Plugin jellybeans: check 'https://github.com/nanotech/jellybeans.vim'
+	"check install vim color scheme
 	Plugin 'majutsushi/tagbar'
 	Plugin 'scrooloose/nerdtree'
 	Plugin 'nathanaelkane/vim-indent-guides'
