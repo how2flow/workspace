@@ -9,5 +9,5 @@ apt-get update && apt-get install -y --no-install-recommends \
   sudo \
   tig \
   tmux \
-  vim-gtk3 \
+  vim \
   wget
