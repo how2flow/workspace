@@ -1,5 +1,7 @@
 # workspace
 
+### script
+
 Run:
 
 ```
@@ -19,4 +21,16 @@ help:
 
 ```
 $ ./set --help
+```
+
+### docker image
+
+pull image
+```
+$ docker pull stevejeong/ubuntu:20.04
+```
+
+run image
+```
+$ docker run -it stevejeong/ubuntu:20.04 bash
 ```
