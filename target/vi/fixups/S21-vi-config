@@ -119,7 +119,7 @@ let mapleader = ","
 " hot key
 "
 map <F10> <C-w><C-v>
-map <F7> <C-w><C-w>
+map <tab> <C-w><C-w>
 
 nmap <F5> :NERDTreeToggle<cr>
 nmap <F6> :TagbarToggle<cr>
