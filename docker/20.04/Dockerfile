@@ -8,10 +8,10 @@ SHELL ["/bin/bash", "-c"]
 ENV ID="steve" \
   TZ="Asia/Seoul" \
   CSCOPE="https://raw.githubusercontent.com/jkhgit/config/ubuntu/mkcscope.sh" \
-  GITCONFIG="https://raw.githubusercontent.com/jkhgit/config/ubuntu/.gitconfig" \
-  TMUXCONFIG="https://raw.githubusercontent.com/jkhgit/config/ubuntu/.tmux.conf" \
-  VIMCOLORS="https://raw.githubusercontent.com/morhetz/gruvbox/master/colors/gruvbox.vim" \
-  VIMCONFIG="https://raw.githubusercontent.com/jkhgit/config/ubuntu/.vimrc"
+  GITCONFIG="https://raw.githubusercontent.com/jkhgit/config/ubuntu/gitconfig" \
+  TMUXCONFIG="https://raw.githubusercontent.com/jkhgit/config/ubuntu/tmux.conf" \
+  VIMCONFIG="https://raw.githubusercontent.com/jkhgit/config/ubuntu/vimrc" \
+  VIMCOLORS="https://raw.githubusercontent.com/morhetz/gruvbox/master/colors/gruvbox.vim"
 
 # set timezone.
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
@@ -28,10 +28,10 @@ USER $ID
 WORKDIR /home/$ID
 RUN mkdir -p .vim/colors && \
   mkdir -p .vim/bundle
-RUN wget --no-check-certificate $GITCONFIG && \
-  wget --no-check-certificate $TMUXCONFIG && \
-  wget -O .vim/colors/gruvbox.vim --no-check-certificate $VIMCOLORS && \
-  wget --no-check-certificate $VIMCONFIG
+RUN wget -O .gitconfig --no-check-certificate $GITCONFIG && \
+  wget -O .tmux.conf --no-check-certificate $TMUXCONFIG && \
+  wget -O .vimrc --no-check-certificate $VIMCONFIG && \
+  wget -O .vim/colors/gruvbox.vim --no-check-certificate $VIMCOLORS
 RUN git clone "https://github.com/VundleVim/Vundle.vim.git" \
   .vim/bundle/Vundle.vim
 RUN vim +PluginInstall +qall
