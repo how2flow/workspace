@@ -1,11 +1,14 @@
 #!/bin/bash
 
 apt-get update && apt-get install -y --no-install-recommends \
+  bison \
   build-essential \
   cscope \
   exuberant-ctags \
+  flex \
   gcc \
   git \
+  libssl-dev \
   ssh \
   sudo \
   tig \
