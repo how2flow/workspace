@@ -1,5 +1,9 @@
 # Dockerfile
 FROM ubuntu:20.04
+LABEL author="steve.jeong"
+LABEL e-mail="jkhpro1003@gmail.com"
+LABEL version="0.0.1"
+
 ARG DEBIAN_FRONTEND=noninteractive
 
 # shell: bash
@@ -16,6 +20,8 @@ ENV ID="steve" \
 # set timezone.
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
+# root user fixups
+USER root
 WORKDIR /root
 COPY packages packages
 COPY user user
@@ -24,6 +30,7 @@ RUN ./packages && rm packages
 RUN ./user $ID && rm user
 RUN wget -O /usr/bin/mkcscope.sh --no-check-certificate $CSCOPE
 
+# normal user fixups
 USER $ID
 WORKDIR /home/$ID
 RUN mkdir -p .vim/colors && \
