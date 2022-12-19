@@ -9,6 +9,7 @@ apt-get update && apt-get install -y --no-install-recommends \
   gcc \
   git \
   libssl-dev \
+  software-properties-common \
   ssh \
   sudo \
   tig \
