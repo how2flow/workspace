@@ -25,12 +25,14 @@ $ ./set --help
 
 ### docker image
 
-pull image
+- ubuntu: 20.04, 22.04
+
+pull image: 20.04
 ```
 $ docker pull stevejeong/ubuntu:20.04
 ```
 
-run image
+run image: 20.04
 ```
 $ docker run -it stevejeong/ubuntu:20.04 bash
 ```

@@ -1,0 +1,49 @@
+# Dockerfile
+FROM ubuntu:22.04
+LABEL author="steve.jeong"
+LABEL e-mail="jkhpro1003@gmail.com"
+LABEL version="0.0.1"
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+# shell: bash
+SHELL ["/bin/bash", "-c"]
+
+ENV ID="steve" \
+  TZ="Asia/Seoul" \
+  CSCOPE="https://raw.githubusercontent.com/jkhgit/config/ubuntu/mkcscope.sh" \
+  GITCONFIG="https://raw.githubusercontent.com/jkhgit/config/ubuntu/gitconfig" \
+  TMUXCONFIG="https://raw.githubusercontent.com/jkhgit/config/ubuntu/tmux.conf" \
+  VIMCONFIG="https://raw.githubusercontent.com/jkhgit/config/ubuntu/vimrc" \
+  VIMCOLORS="https://raw.githubusercontent.com/morhetz/gruvbox/master/colors/gruvbox.vim"
+
+# set timezone.
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# root user fixups
+USER root
+WORKDIR /root
+COPY packages packages
+COPY user user
+RUN chmod +x packages user
+RUN ./packages && rm packages
+RUN ./user $ID && rm user
+RUN wget -O /usr/bin/mkcscope.sh --no-check-certificate $CSCOPE
+# allow rsa-key type Authentication.
+RUN echo "HostKeyAlgorithms +ssh-rsa" >> /etc/ssh/ssh_config
+RUN echo "PubkeyAcceptedKeyTypes +ssh-rsa" >> /etc/ssh/ssh_config
+
+# normal user fixups
+USER $ID
+WORKDIR /home/$ID
+RUN mkdir -p .vim/colors && \
+  mkdir -p .vim/bundle
+RUN wget -O .gitconfig --no-check-certificate $GITCONFIG && \
+  wget -O .tmux.conf --no-check-certificate $TMUXCONFIG && \
+  wget -O .vimrc --no-check-certificate $VIMCONFIG && \
+  wget -O .vim/colors/gruvbox.vim --no-check-certificate $VIMCOLORS
+RUN git clone "https://github.com/VundleVim/Vundle.vim.git" \
+  .vim/bundle/Vundle.vim
+RUN vim +PluginInstall +qall
+RUN echo "alias tmux='tmux -2'" >> .bashrc
+RUN echo "set -o vi" >> .bashrc
