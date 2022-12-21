@@ -1,0 +1,20 @@
+version: '3'
+
+volumes:
+  share_data: {}
+
+services:
+  workspace:
+    image: stevejeong/ubuntu:22.04
+    container_name: work-jammy
+    stdin_open: true
+    tty: true
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+    volumes:
+      - share_data:/var/lib/share_data
+    environment:
+      - PYTHONUNBUFFERED=0
+
+# docker compose up -d
+# docker attach work-jammy
