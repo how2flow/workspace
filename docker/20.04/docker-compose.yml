@@ -2,6 +2,7 @@ version: '3'
 
 volumes:
   share_data: {}
+  kernel: {}
 
 services:
   workspace:
@@ -13,6 +14,7 @@ services:
       - /dev/ttyUSB0:/dev/ttyUSB0
     volumes:
       - share_data:/var/lib/share_data
+      - kernel:/var/lib/kernel
     environment:
       - PYTHONUNBUFFERED=0
 
