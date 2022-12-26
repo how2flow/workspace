@@ -4,9 +4,10 @@
 # written by steve.jeong <jkhpro1003@gmail.com>
 
 id=$1
+password="docker"
 
 # set root password
-echo "root:root" | chpasswd
+echo "root:${password}" | chpasswd
 
 # user account
 groupadd --gid 1000 ${id} && \
@@ -20,4 +21,4 @@ groupadd --gid 1000 ${id} && \
 echo "%$id ALL=(ALL) ALL" >> /etc/sudoers
 
 # set user password
-echo "$id:$id" | chpasswd
+echo "$id:${password}" | chpasswd
