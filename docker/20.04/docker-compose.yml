@@ -6,7 +6,7 @@ volumes:
 
 services:
   workspace:
-    image: stevejeong/ubuntu:20.04
+    image: how2flow/ubuntu:20.04
     container_name: work-focal
     stdin_open: true
     tty: true

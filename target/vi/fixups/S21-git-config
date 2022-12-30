@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# wget https://raw.githubusercontent.com/jkhgit/config/ubuntu/.gitconfig
+# wget https://raw.githubusercontent.com/how2flow/config/ubuntu/.gitconfig
 git_config() {
   # user
   git config __GIT_OPTIONS__ user.name ""

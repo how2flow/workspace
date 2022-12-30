@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # author: "steve.jeong"
-# e-mail: "jkhpro1003@gmail.com"
+# e-mail: "how2soft@gmail.com"
 # date: 2022.11.10
 
 # vars
@@ -34,7 +34,7 @@ print_env() {
 
   echo "@@@ workspace setting script @@@"
   echo "Author:steve.jeong"
-  echo "E-mail:jkhpro1003@gmail.com"
+  echo "E-mail:how2soft@gmail.com"
   echo "date: ${TIME}"
   echo ""
 

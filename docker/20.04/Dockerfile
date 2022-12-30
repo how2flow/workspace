@@ -1,7 +1,7 @@
 # Dockerfile
 FROM ubuntu:20.04
 LABEL author="steve.jeong"
-LABEL e-mail="jkhpro1003@gmail.com"
+LABEL e-mail="how2soft@gmail.com"
 LABEL version="0.0.1"
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -9,12 +9,12 @@ ARG DEBIAN_FRONTEND=noninteractive
 # shell: bash
 SHELL ["/bin/bash", "-c"]
 
-ENV ID="steve" \
+ENV ID="user" \
   TZ="Asia/Seoul" \
-  CSCOPE="https://raw.githubusercontent.com/jkhgit/config/ubuntu/mkcscope.sh" \
-  GITCONFIG="https://raw.githubusercontent.com/jkhgit/config/ubuntu/gitconfig" \
-  TMUXCONFIG="https://raw.githubusercontent.com/jkhgit/config/ubuntu/tmux.conf" \
-  VIMCONFIG="https://raw.githubusercontent.com/jkhgit/config/ubuntu/vimrc" \
+  CSCOPE="https://raw.githubusercontent.com/how2flow/config/ubuntu/mkcscope.sh" \
+  GITCONFIG="https://raw.githubusercontent.com/how2flow/config/ubuntu/gitconfig" \
+  TMUXCONFIG="https://raw.githubusercontent.com/how2flow/config/ubuntu/tmux.conf" \
+  VIMCONFIG="https://raw.githubusercontent.com/how2flow/config/ubuntu/vimrc" \
   VIMCOLORS="https://raw.githubusercontent.com/morhetz/gruvbox/master/colors/gruvbox.vim"
 
 # set timezone.

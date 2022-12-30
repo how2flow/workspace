@@ -29,10 +29,10 @@ $ ./set --help
 
 pull image: 20.04
 ```
-$ docker pull stevejeong/ubuntu:20.04
+$ docker pull how2flow/ubuntu:20.04
 ```
 
 run image: 20.04
 ```
-$ docker run -it stevejeong/ubuntu:20.04 bash
+$ docker run -it how2flow/ubuntu:20.04 bash
 ```

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# wget https://raw.githubusercontent.com/jkhgit/config/ubuntu/.vimrc
+# wget https://raw.githubusercontent.com/how2flow/config/ubuntu/.vimrc
 vi_config() {
   sudo cat <<__EOF >> __HOME__/.vimrc
 set shell=/bin/bash
