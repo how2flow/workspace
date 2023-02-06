@@ -9,7 +9,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 # shell: bash
 SHELL ["/bin/bash", "-c"]
 
-ENV ID="user" \
+ENV USER="user" \
   TZ="Asia/Seoul" \
   CSCOPE="https://raw.githubusercontent.com/how2flow/config/ubuntu/mkcscope.sh" \
   GITCONFIG="https://raw.githubusercontent.com/how2flow/config/ubuntu/gitconfig" \
@@ -27,12 +27,12 @@ COPY packages packages
 COPY user user
 RUN chmod +x packages user
 RUN ./packages && rm packages
-RUN ./user $ID && rm user
+RUN ./user $USER && rm user
 RUN wget -O /usr/bin/mkcscope.sh --no-check-certificate $CSCOPE
 
 # normal user fixups
-USER $ID
-WORKDIR /home/$ID
+USER $USER
+WORKDIR /home/$USER
 RUN mkdir -p .vim/colors && \
   mkdir -p .vim/bundle
 RUN wget -O .gitconfig --no-check-certificate $GITCONFIG && \
