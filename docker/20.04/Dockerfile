@@ -1,8 +1,8 @@
 # Dockerfile
 FROM ubuntu:20.04
-LABEL author="steve.jeong"
+LABEL author="Steve Jeong"
 LABEL e-mail="how2soft@gmail.com"
-LABEL version="0.0.1"
+LABEL version="0.0.2"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
