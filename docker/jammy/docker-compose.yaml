@@ -6,7 +6,7 @@ volumes:
 
 services:
   workspace:
-    image: how2flow/ubuntu:22.04
+    image: how2flow/workspace:jammy
     container_name: work-jammy
     stdin_open: true
     tty: true

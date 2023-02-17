@@ -1,9 +1,9 @@
 # Dockerfile
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 LABEL author="Steve Jeong"
 LABEL e-mail="how2soft@gmail.com"
 LABEL github="how2flow"
-LABEL version="1.0.0"
+LABEL version="2.0.0"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -30,6 +30,9 @@ RUN chmod +x packages user
 RUN ./packages && rm packages
 RUN ./user $USER && rm user
 RUN wget -O /usr/bin/mkcscope.sh --no-check-certificate $CSCOPE
+# allow rsa-key type Authentication.
+RUN echo "HostKeyAlgorithms +ssh-rsa" >> /etc/ssh/ssh_config
+RUN echo "PubkeyAcceptedKeyTypes +ssh-rsa" >> /etc/ssh/ssh_config
 
 # normal user fixups
 USER $USER
