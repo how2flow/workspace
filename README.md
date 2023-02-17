@@ -25,14 +25,12 @@ $ ./set --help
 
 ### docker image
 
-- ubuntu: 20.04, 22.04
+**support list:**
+- focal
+- jammy
 
-pull image: 20.04
+pull & run image: focal
 ```
-$ docker pull how2flow/ubuntu:20.04
-```
-
-run image: 20.04
-```
-$ docker run -it how2flow/ubuntu:20.04 bash
+$ docker pull how2flow/workspace:focal
+$ docker run -it how2flow/workspace:focal bash
 ```
