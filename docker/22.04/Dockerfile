@@ -2,7 +2,8 @@
 FROM ubuntu:22.04
 LABEL author="Steve Jeong"
 LABEL e-mail="how2soft@gmail.com"
-LABEL version="0.0.2"
+LABEL github="how2flow"
+LABEL version="1.0.0"
 
 ARG DEBIAN_FRONTEND=noninteractive
 

@@ -11,7 +11,7 @@ services:
     stdin_open: true
     tty: true
     devices:
-      - /dev/ttyUSB0:/dev/ttyUSB0
+#      - /dev/ttyUSB0:/dev/ttyUSB0 # optional
     volumes:
       - share_data:/var/lib/share_data
       - kernel:/var/lib/kernel
