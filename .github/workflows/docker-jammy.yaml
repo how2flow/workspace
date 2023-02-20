@@ -1,0 +1,40 @@
+name: 'docker-jammy (CI/CD)'
+
+on:
+  push:
+    branches:
+      - 'master'
+    tags:
+      - 'v*'
+    paths:
+      - 'docker/jammy/*'
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+      tags:
+        description: 'Test scenario tags'
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout'
+        uses: actions/Checkout@v3
+
+      - name: 'Get release date'
+        id: 'release-date'
+        run: |
+          echo "RELEASE_DATE=$(date '+%Y%m%d')" >> $GITHUB_OUTPUT
+
+      - name: 'Docker upload'
+        uses: how2flow/upload-docker-action@v1
+        with:
+          distro: 'jammy'
+          path: 'docker/jammy'
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repo: 'workspace'
+          release: '${{ steps.release-date.outputs.RELEASE_DATE }}'
