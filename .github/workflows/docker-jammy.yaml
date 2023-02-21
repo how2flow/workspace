@@ -4,8 +4,10 @@ on:
   push:
     branches:
       - 'master'
-    tags:
-      - 'v*'
+    paths:
+      - 'docker/jammy/*'
+    tags-ignore:
+      - 'v2.0.*'
   workflow_dispatch:
     inputs:
       logLevel:
