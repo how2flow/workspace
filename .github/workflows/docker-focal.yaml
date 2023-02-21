@@ -6,8 +6,6 @@ on:
       - 'master'
     tags:
       - 'v*'
-    paths:
-      - 'docker/focal/*'
   workflow_dispatch:
     inputs:
       logLevel:
