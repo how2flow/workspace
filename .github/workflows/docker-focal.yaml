@@ -32,9 +32,8 @@ jobs:
       - name: 'Docker upload'
         uses: how2flow/upload-docker-action@v1
         with:
-          distro: 'focal'
-          path: 'docker/focal'
+          context: 'docker/focal'
+          repository: 'workspace'
+          release: 'focal-v${{ steps.release-date.outputs.RELEASE_DATE }}'
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          repo: 'workspace'
-          release: '${{ steps.release-date.outputs.RELEASE_DATE }}'
