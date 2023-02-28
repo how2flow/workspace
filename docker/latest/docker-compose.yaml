@@ -6,8 +6,8 @@ volumes:
 
 services:
   workspace:
-    image: how2flow/workspace:focal
-    container_name: work-focal
+    image: how2flow/workspace:latest
+    container_name: work-latest
     stdin_open: true
     tty: true
     devices:
