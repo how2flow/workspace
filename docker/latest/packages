@@ -1,0 +1,19 @@
+#!/bin/bash
+
+apt-get update && apt-get install -y --no-install-recommends \
+  bc \
+  bison \
+  build-essential \
+  cscope \
+  exuberant-ctags \
+  flex \
+  gcc \
+  git \
+  libssl-dev \
+  software-properties-common \
+  ssh \
+  sudo \
+  tig \
+  tmux \
+  vim \
+  wget
