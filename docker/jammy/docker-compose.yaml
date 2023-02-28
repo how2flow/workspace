@@ -10,8 +10,9 @@ services:
     container_name: work-jammy
     stdin_open: true
     tty: true
-    devices:
-#      - /dev/ttyUSB0:/dev/ttyUSB0 # optional
+    # optional
+#    devices:
+#      - /dev/ttyUSB0:/dev/ttyUSB0
     volumes:
       - share_data:/var/lib/share_data
       - kernel:/var/lib/kernel
