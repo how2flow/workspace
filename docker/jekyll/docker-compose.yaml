@@ -6,13 +6,12 @@ volumes:
 
 services:
   workspace:
-    image: how2flow/workspace:focal
-    container_name: work-focal
+    image: how2flow/workspace:jekyll
+    container_name: work-jekyll
     stdin_open: true
     tty: true
     volumes:
       - share_data:/var/lib/share_data
-      - kernel:/var/lib/kernel
     environment:
       - PYTHONUNBUFFERED=0
     port:
