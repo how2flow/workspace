@@ -10,6 +10,9 @@ ARG DEBIAN_FRONTEND=noninteractive
 # shell: bash
 SHELL ["/bin/bash", "-c"]
 
+# expose port
+EXPOSE 4000
+
 # vars
 ENV ID="user" \
   TZ="Asia/Seoul" \
