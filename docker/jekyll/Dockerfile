@@ -13,6 +13,9 @@ SHELL ["/bin/bash", "-c"]
 # expose port
 EXPOSE 4000
 
+# set encoding
+ENV LC_ALL=C.UTF-8
+
 # vars
 ENV ID="user" \
   TZ="Asia/Seoul" \
