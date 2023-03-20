@@ -24,16 +24,11 @@ jobs:
       - name: 'Checkout'
         uses: actions/Checkout@v3
 
-      - name: 'Get release date'
-        id: 'release-date'
-        run: |
-          echo "RELEASE_DATE=$(date '+%Y%m%d')" >> $GITHUB_OUTPUT
-
       - name: 'Docker upload'
         uses: how2flow/upload-docker-action@v1
         with:
           context: 'docker/jammy'
           repository: 'workspace'
-          release: 'jammy-v${{ steps.release-date.outputs.RELEASE_DATE }}'
+          release: 'jammy'
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
