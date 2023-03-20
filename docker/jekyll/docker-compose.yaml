@@ -14,7 +14,7 @@ services:
       - share_data:/var/lib/share_data
     environment:
       - PYTHONUNBUFFERED=0
-    port:
+    ports:
       - 4000:4000
 
 # docker compose up -d
