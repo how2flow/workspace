@@ -3,7 +3,7 @@
 # https://github.com/how2flow/docker_ws/example/docker.user
 # written by steve.jeong <how2soft@gmail.com>
 
-id=$1
+id="${1:-user}"
 password="docker"
 
 # set root password
