@@ -1,0 +1,22 @@
+version: '3'
+
+volumes:
+  share_data: {}
+  kernel: {}
+
+services:
+  workspace:
+    image: how2flow/workspace:focal
+    container_name: work-focal
+    stdin_open: true
+    tty: true
+    volumes:
+      - share_data:/var/lib/share_data
+      - kernel:/var/lib/kernel
+    environment:
+      - PYTHONUNBUFFERED=0
+    port:
+      - 4000:4000
+
+# docker compose up -d
+# docker attach work-focal

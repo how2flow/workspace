@@ -1,0 +1,39 @@
+name: 'docker-jekyll (CI/CD)'
+
+on:
+  push:
+    branches:
+      - 'master'
+    paths:
+      - 'docker/jekyll/*'
+    tags-ignore:
+      - 'v2.0.*'
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+      tags:
+        description: 'Test scenario tags'
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout'
+        uses: actions/Checkout@v3
+
+      - name: 'Get release date'
+        id: 'release-date'
+        run: |
+          echo "RELEASE_DATE=$(date '+%Y%m%d')" >> $GITHUB_OUTPUT
+
+      - name: 'Docker upload'
+        uses: how2flow/upload-docker-action@v1
+        with:
+          context: 'docker/jekyll'
+          repository: 'workspace'
+          release: 'jekyll'
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
