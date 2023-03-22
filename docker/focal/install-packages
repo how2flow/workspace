@@ -4,6 +4,7 @@ apt-get update && apt-get install -y --no-install-recommends \
   bc \
   bison \
   build-essential \
+  cpio \
   cscope \
   exuberant-ctags \
   flex \
