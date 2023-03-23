@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# The repo cannot be saved separately because it is added from the existing bashrc. This is because the contents of the existing bashrc are different depending on the Linux distribution version.
+
 ros2_config() {
   sudo cat <<__EOF >> __HOME__/.bashrc
 # ROS setting
