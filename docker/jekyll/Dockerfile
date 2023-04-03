@@ -19,10 +19,10 @@ ENV LC_ALL=C.UTF-8
 # vars
 ENV ID="user" \
   TZ="Asia/Seoul" \
-  CSCOPE="https://raw.githubusercontent.com/how2flow/config/ubuntu/mkcscope.sh" \
-  GITCONFIG="https://raw.githubusercontent.com/how2flow/config/ubuntu/gitconfig" \
-  TMUXCONFIG="https://raw.githubusercontent.com/how2flow/config/ubuntu/tmux.conf" \
-  VIMCONFIG="https://raw.githubusercontent.com/how2flow/config/ubuntu/vimrc" \
+  CSCOPE="https://raw.githubusercontent.com/how2flow/config/master/ubuntu/mkcscope.sh" \
+  GITCONFIG="https://raw.githubusercontent.com/how2flow/config/master/ubuntu/gitconfig" \
+  TMUXCONFIG="https://raw.githubusercontent.com/how2flow/config/master/ubuntu/tmux.conf" \
+  VIMCONFIG="https://raw.githubusercontent.com/how2flow/config/master/ubuntu/vimrc" \
   VIMCOLORS="https://raw.githubusercontent.com/morhetz/gruvbox/master/colors/gruvbox.vim" \
   USER="add-user" \
   PACKAGES="install-packages"

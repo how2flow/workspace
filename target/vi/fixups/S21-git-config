@@ -1,6 +1,6 @@
 #!/bin/bash
 
-GITCONFIG="https://raw.githubusercontent.com/how2flow/config/ubuntu/gitconfig"
+GITCONFIG="https://raw.githubusercontent.com/how2flow/config/master/ubuntu/gitconfig"
 
 [ -e __HOME__/.gitconfig ] && sudo rm -rf __HOME__/.gitconfig
 wget -O __HOME__/.gitconfig ${GITCONFIG}
