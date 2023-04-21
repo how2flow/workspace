@@ -20,4 +20,4 @@ services:
       - PYTHONUNBUFFERED=0
 
 # docker compose up -d
-# docker attach work-focal
+# docker attach work-latest

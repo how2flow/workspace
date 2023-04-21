@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# add new id after install packages.
+# written by how2flow(Steve Jeong).
+
+ID="${1:-user}"
+GROUP="${2:-user}"
+PASSWORD="${3:-docker}"
+SUDOERS_FILE="/etc/sudoers"
+
+# set root password
+echo "root:${PASSWORD}" | chpasswd
+
+# set user groups
+groupadd --gid 1000 "${GROUP}"
+
+# set user ID
+useradd --system --create-home --home-dir /home/"${ID}" \
+--shell /bin/bash --gid "${GROUP}" --uid 1001 "${ID}"
+
+# set user password
+echo "$ID:${PASSWORD}" | chpasswd
+
+echo "Finish Add User"

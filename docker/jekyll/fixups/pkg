@@ -1,21 +1,13 @@
 #!/bin/bash
 
 apt-get update && apt-get install -y --no-install-recommends \
-  bc \
-  bison \
   build-essential \
-  cpio \
-  cscope \
-  exuberant-ctags \
-  flex \
-  gcc \
-  git \
+  fonts-nanum \
   libssl-dev \
   rsync \
+  ruby \
+  ruby-dev \
   software-properties-common \
-  ssh \
-  sudo \
-  tig \
-  tmux \
-  vim \
-  wget
+  tig
+
+gem install bundler

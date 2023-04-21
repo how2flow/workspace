@@ -1,21 +1,11 @@
-name: 'docker-jammy (CI/CD)'
+name: 'docker-workspace (CI/CD)'
 
 on:
   push:
     branches:
       - 'master'
     paths:
-      - 'docker/jammy/*'
-    tags-ignore:
-      - 'v2.0.*'
-  workflow_dispatch:
-    inputs:
-      logLevel:
-        description: 'Log level'
-        required: true
-        default: 'warning'
-      tags:
-        description: 'Test scenario tags'
+      - 'docker/base/*'
 
 jobs:
   docker:
@@ -27,8 +17,8 @@ jobs:
       - name: 'Docker upload'
         uses: how2flow/upload-docker-action@v1
         with:
-          context: 'docker/jammy'
+          context: 'docker/base'
           repository: 'workspace'
-          release: 'jammy'
+          release: 'base'
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}

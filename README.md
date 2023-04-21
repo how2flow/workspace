@@ -25,12 +25,8 @@ $ ./set --help
 
 ### docker image
 
-**support list:**
-- focal
-- jammy
-
-pull & run image: focal
+pull & run image
 ```
-$ docker pull how2flow/workspace:focal
-$ docker run -it how2flow/workspace:focal bash
+$ docker pull how2flow/workspace:latest
+$ docker run -it how2flow/workspace:latest
 ```

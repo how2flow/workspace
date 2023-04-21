@@ -1,6 +1,7 @@
 #!/bin/bash
 
-apt-get update && apt-get install -y --no-install-recommends \
+# install packages
+apt-get update && apt-get upgrade -y --no-install-recommends \
   bc \
   bison \
   build-essential \
@@ -9,13 +10,8 @@ apt-get update && apt-get install -y --no-install-recommends \
   exuberant-ctags \
   flex \
   gcc \
-  git \
   libssl-dev \
+  minicom \
   rsync \
   software-properties-common \
-  ssh \
-  sudo \
-  tig \
-  tmux \
-  vim \
-  wget
+  tig
