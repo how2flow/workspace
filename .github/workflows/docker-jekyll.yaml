@@ -1,4 +1,4 @@
-name: 'docker-jekyll (CI/CD)'
+name: 'workspace-jekyll (docker)'
 
 on:
   workflow_dispatch:

@@ -1,4 +1,4 @@
-name: 'docker-workspace (CI/CD)'
+name: 'workspace-latest (docker)'
 
 on:
   workflow_dispatch:

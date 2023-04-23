@@ -27,6 +27,6 @@ $ ./set --help
 
 pull & run image
 ```
-$ docker pull how2flow/workspace:latest
-$ docker run -it how2flow/workspace:latest
+$ docker pull how2flow/workspace:base
+$ docker run -it how2flow/workspace:base
 ```
