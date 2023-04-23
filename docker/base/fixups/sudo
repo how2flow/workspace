@@ -1,6 +1,0 @@
-#!/bin/bash
-
-if [ -x "$(command -v sudo)" ]; then
-  usermod -aG sudo "${1:-user}"
-  touch /home/"${1:-user}"/.sudo_as_admin_successful
-fi

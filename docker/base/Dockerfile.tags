@@ -1,17 +1,30 @@
 # Dockerfile
+
+# ===== No Edit =====
 FROM how2flow/workspace:base
+# ===================
 
 ENV ID="tags"
 
+# ===== No Edit =====
 USER root
 WORKDIR /root
 COPY fixups fixups
 RUN chmod -R +x fixups
-RUN ./fixups/pkg
-RUN ./fixups/chid $ID
-# RUN ./fixups/..
-RUN rm -rf fixups
+# ===================
 
+# ===== No Edit =====
+WORKDIR /root/fixups
+RUN ./postfix $ID
+# ===================
+# TODO ...
+#
+# ===== No Edit =====
+RUN rm -rf fixups
+# ===================
+
+# ===== No Edit =====
 USER ${ID}
 WORKDIR /home/${ID}
-# user fixups ...
+# ===================
+# TODO ...

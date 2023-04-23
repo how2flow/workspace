@@ -1,7 +1,0 @@
-#!/bin/bash
-
-apt-get update && apt-get install -y --no-install-recommends git sudo ssh tmux vim wget
-
-if [ -x "$(command -v brltty)" ]; then
-  apt-get remove brltty
-fi

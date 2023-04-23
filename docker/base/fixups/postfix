@@ -1,0 +1,77 @@
+#!/bin/bash
+
+# configs after preinst.
+# written by how2flow(Steve Jeong).
+
+ID="${1:-user}"
+GROUP="${2:-user}"
+PASSWORD="${3:-docker}"
+
+ROOT="$(cd $(dirname $0); pwd -P )"
+. "${ROOT}"/global
+
+get_app_configs() {
+  local home="/home/"${ID}""
+
+  # move configs
+  if [[ -d "${CONFDIR}" && -d "${home}" ]]; then
+    mv "${CONFDIR}"/* "${home}"
+  fi
+
+  rm -rf "${CONFDIR}"
+
+  echo "Finish Download app configs"
+}
+
+id_config() {
+  # set root password
+  echo "root:${PASSWORD}" | chpasswd
+  
+  # set user groups
+  groupadd --gid 1000 "${GROUP}"
+  
+  # set user ID
+  useradd --system --create-home --home-dir /home/"${ID}" \
+  --shell /bin/bash --gid "${GROUP}" --uid 1001 "${ID}"
+  
+  # set user password
+  echo "$ID:${PASSWORD}" | chpasswd
+
+  echo "Finish ID config"
+}
+
+rc_config() {
+  local bashrc="/home/"${ID}"/.bashrc"
+
+  # bashrc user confs
+  if [ -f "${bashrc}" ]; then
+    echo "alias tmux='tmux -2'" >> "${bashrc}" /dev/null 2>&1
+    echo "set -o vi" >> "${bashrc}" /dev/null 2>&1
+  fi
+
+  echo "Finish rc config"
+}
+
+sudo_config() {
+  local sudoers_conf="/etc/sudoers"
+
+  # remove sudo warning message
+  if [ -x "$(command -v sudo)" ]; then
+    usermod -aG sudo "${ID}"
+    touch /home/"${ID}"/.sudo_as_admin_successful
+  fi
+
+  # sudoers config
+  echo "%$id ALL=(ALL) ALL" >> "${sudoers_conf}"
+
+  echo "Finish sudo config"
+}
+
+main() {
+  id_config
+  rc_config
+  sudo_config
+  get_app_configs
+}
+
+main
