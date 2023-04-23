@@ -22,9 +22,7 @@ download_app_configs() {
 
     # download configs for vim plugin.
     mkdir -p "${home}"/.vim/colors "${CONFDIR}"/.vim/bundle
-    echo "git 1"
     git clone "https://github.com/VundleVim/Vundle.vim.git" "${home}"/.vim/bundle/Vundle.vim
-    echo "git 2"
     wget -O "${home}"/.vim/colors/gruvbox.vim $WGET_FLAG "https://raw.githubusercontent.com/morhetz/gruvbox/master/colors/gruvbox.vim"
   fi
 
