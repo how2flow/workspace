@@ -3,28 +3,12 @@
 # configs after preinst.
 # written by how2flow(Steve Jeong).
 
-ROOT="$(cd $(dirname $0); pwd -P )"
-
-. "${ROOT}"/global
-
-downlaod_app_configs() {
-  # download configs
-  if [ -x "$(command -v wget)" ]; then
-    mkdir -p "${CONFDIR}"
-    wget -O "${CONFDIR}"/.gitconfig $WGET_FLAG "https://raw.githubusercontent.com/how2flow/config/master/ubuntu/gitconfig"
-    wget -O "${CONFDIR}"/.tmux.conf $WGET_FLAG  "https://raw.githubusercontent.com/how2flow/config/master/ubuntu/tmux.conf"
-    git clone "https://github.com/VundleVim/Vundle.vim.git" "${prefix}"/.vim/bundle/Vundle.vim
-    
-    # download configs for vim
-    mkdir -p "${CONFDIR}"/.vim/colors "${CONFDIR}"/.vim/bundle
-    wget -O "${CONFDIR}"/.vimrc $WGET_FLAG "https://raw.githubusercontent.com/how2flow/config/master/ubuntu/vimrc"
-    wget -O "${CONFDIR}"/.vim/colors/gruvbox.vim $WGET_FLAG "https://raw.githubusercontent.com/morhetz/gruvbox/master/colors/gruvbox.vim"
-  fi
-}
-
 install_packages() {
   # prefix pacakges: git sudo ssh tmux vim wget
   apt-get update && apt-get install -y --no-install-recommends git sudo ssh tmux vim wget
+
+  # installl certificates
+  apt-get install --reinstall -y ca-certificates
   
   if [ -x "$(command -v brltty)" ]; then
     apt-get remove brltty
@@ -47,7 +31,6 @@ ssh_config() {
 main() {
   install_packages
   ssh_config
-  downlaod_app_configs
 }
 
 main

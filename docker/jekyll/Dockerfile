@@ -4,7 +4,8 @@
 FROM how2flow/workspace:base
 # ===================
 
-ENV ID="jekyll"
+ENV ID="jekyll" \
+  PASSWORD="jekyll"
 
 # ===== No Edit =====
 USER root
@@ -15,7 +16,7 @@ RUN chmod -R +x fixups
 
 # ===== No Edit =====
 WORKDIR /root/fixups
-RUN ./postfix $ID
+RUN ./postfix $ID $PASSWORD
 # ===================
 # TODO ...
 RUN ./pkg

@@ -4,21 +4,29 @@
 # written by how2flow(Steve Jeong).
 
 ID="${1:-user}"
-GROUP="${2:-user}"
-PASSWORD="${3:-docker}"
+PASSWORD="${2:-docker}"
+GROUP="${3:-user}"
 
-ROOT="$(cd $(dirname $0); pwd -P )"
-. "${ROOT}"/global
-
-get_app_configs() {
+download_app_configs() {
   local home="/home/"${ID}""
 
-  # move configs
-  if [[ -d "${CONFDIR}" && -d "${home}" ]]; then
-    mv "${CONFDIR}"/* "${home}"
+  if [ ! -d "${home}" ]; then
+    echo "There is no account..."
   fi
 
-  rm -rf "${CONFDIR}"
+  # download configs
+  if [ -x "$(command -v wget)" ]; then
+    wget -O "${home}"/.gitconfig $WGET_FLAG "https://raw.githubusercontent.com/how2flow/config/master/ubuntu/gitconfig"
+    wget -O "${home}"/.tmux.conf $WGET_FLAG  "https://raw.githubusercontent.com/how2flow/config/master/ubuntu/tmux.conf"
+    wget -O "${home}"/.vimrc $WGET_FLAG "https://raw.githubusercontent.com/how2flow/config/master/ubuntu/vimrc"
+
+    # download configs for vim plugin.
+    mkdir -p "${home}"/.vim/colors "${CONFDIR}"/.vim/bundle
+    echo "git 1"
+    git clone "https://github.com/VundleVim/Vundle.vim.git" "${home}"/.vim/bundle/Vundle.vim
+    echo "git 2"
+    wget -O "${home}"/.vim/colors/gruvbox.vim $WGET_FLAG "https://raw.githubusercontent.com/morhetz/gruvbox/master/colors/gruvbox.vim"
+  fi
 
   echo "Finish Download app configs"
 }
@@ -45,8 +53,8 @@ rc_config() {
 
   # bashrc user confs
   if [ -f "${bashrc}" ]; then
-    echo "alias tmux='tmux -2'" >> "${bashrc}" /dev/null 2>&1
-    echo "set -o vi" >> "${bashrc}" /dev/null 2>&1
+    echo "alias tmux='tmux -2'" >> "${bashrc}" > /dev/null 2>&1
+    echo "set -o vi" >> "${bashrc}" > /dev/null 2>&1
   fi
 
   echo "Finish rc config"
@@ -62,7 +70,7 @@ sudo_config() {
   fi
 
   # sudoers config
-  echo "%$id ALL=(ALL) ALL" >> "${sudoers_conf}"
+  echo "%$ID ALL=(ALL) ALL" >> "${sudoers_conf}"
 
   echo "Finish sudo config"
 }
@@ -71,7 +79,7 @@ main() {
   id_config
   rc_config
   sudo_config
-  get_app_configs
+  download_app_configs
 }
 
 main
