@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# add new id after install packages.
+# written by how2flow(Steve Jeong).
+
+OLD=:user
+NEW=$1
+
+if [ "${NEW}" != "user" ]; then
+  usermod -l "${OLD}" "${NEW}"
+  usermod -d /home/"${NEW}" -m "${NEW}" && \
+    mv /home/"${OLD}"/* /home/"${NEW}"
+  groupmod -n "${NEW}" "${OLD}"
+fi

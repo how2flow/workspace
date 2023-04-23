@@ -8,10 +8,9 @@ WORKDIR /root
 COPY fixups fixups
 RUN chmod -R +x fixups
 RUN ./fixups/pkg
+RUN ./fixups/chid $ID
 # RUN ./fixups/..
-RUN ./id $ID
-RUN ./sudo $ID
-RUN rm -rf fixups id sudo
+RUN rm -rf fixups
 
 USER ${ID}
 WORKDIR /home/${ID}

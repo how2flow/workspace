@@ -18,12 +18,11 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 USER root
 WORKDIR /root
 COPY fixups fixups
-COPY id id
-COPY sudo sudo
-RUN chmod -R +x fixups id sudo
-RUN ./fixups/pkg
+RUN chmod -R +x fixups
+RUN ./fixups/preinst
 RUN ./fixups/ssh
-RUN rm -rf fixups
+RUN ./fixups/id
+RUN ./fixups/sudo
 
 USER ${ID}
 WORKDIR /home/${ID}

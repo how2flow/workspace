@@ -1,19 +1,17 @@
 # Dockerfile
 FROM how2flow/workspace:base
 
-# vars
 ENV ID="jekyll"
 
-# root fixups
 USER root
 WORKDIR /root
 COPY fixups fixups
 RUN chmod -R +x fixups
 RUN ./fixups/pkg
-RUN ./id $ID
-RUN ./sudo $ID
-RUN rm -rf fixups id sudo
+RUN ./fixups/chid $ID
+# RUN ./fixups/..
+RUN rm -rf fixups
 
-# user fixups
 USER ${ID}
 WORKDIR /home/${ID}
+# user fixups ...
