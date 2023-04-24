@@ -30,3 +30,4 @@ WORKDIR /home/${ID}
 # ===================
 # TODO ...
 RUN vim +PluginInstall +qall
+RUN echo "export LC_ALL=C.UTF-8" >> .bashrc
