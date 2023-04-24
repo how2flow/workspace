@@ -54,8 +54,9 @@ rc_config() {
 
   # bashrc user confs
   if [ -f "${bashrc}" ]; then
-    echo "alias tmux='tmux -2'" >> "${bashrc}" > /dev/null 2>&1
-    echo "set -o vi" >> "${bashrc}" > /dev/null 2>&1
+    echo "set bashrc"
+    echo "alias tmux='tmux -2'" >> "${bashrc}"
+    echo "set -o vi" >> "${bashrc}"
   fi
 
   echo "Finish rc config"
