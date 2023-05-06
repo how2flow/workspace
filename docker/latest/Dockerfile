@@ -1,7 +1,7 @@
 # Dockerfile
 
 # ===== No Edit =====
-FROM how2flow/workspace:base
+FROM how2flow/config:ubuntu
 # ===================
 
 ENV ID="user"

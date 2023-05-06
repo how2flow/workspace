@@ -1,8 +1,0 @@
-# Docker
-Dockerfile.tags
-
-# fixups
-fixups/*.txt
-
-# etc
-*.swp

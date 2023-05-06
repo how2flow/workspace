@@ -1,7 +1,7 @@
 # Dockerfile
 
 # ===== No Edit =====
-FROM how2flow/workspace:base
+FROM how2flow/config:ubuntu
 # ===================
 
 ENV ID="tags"
@@ -15,10 +15,9 @@ RUN chmod -R +x fixups
 
 # ===== No Edit =====
 WORKDIR /root/fixups
-RUN ./postfix $ID
+RUN ./postfix $ID $PASSWORD
 # ===================
 # TODO ...
-#
 # ===== No Edit =====
 RUN rm -rf fixups
 # ===================
