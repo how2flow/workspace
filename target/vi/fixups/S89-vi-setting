@@ -1,9 +1,7 @@
 #!/bin/bash
 
 CLRURL="https://raw.githubusercontent.com/morhetz/gruvbox/master/colors/gruvbox.vim"
-COLORS=gruvbox.vim
 DST_VDLURL="__HOME__/.vim/bundle/Vundle.vim"
-DST_CLRURL="/usr/share/vim/vim${VIM_VERSION}/colors"
 VDLURL="https://github.com/VundleVim/Vundle.vim.git"
 
 # vim
@@ -11,9 +9,7 @@ echo "===== VIM PLUGIN INSTALL ====="
 sudo rm -rf __HOME__/.vim
 git clone ${VDLURL} ${DST_VDLURL}
 mkdir -p __HOME__/.vim/colors
-cd __HOME__/.vim/colors
-curl -O ${CLRURL}
-sudo mv ${COLORS} ${DST_CLRURL} # need to check 'vim81'
+wget -O  __HOME__/.vim/colors/gruvbox.vim ${CLRURL}
 
 echo "===== Apply VIM ====="
 vim +PluginInstall +qall
