@@ -25,5 +25,6 @@ RUN rm -rf fixups
 # ===== No Edit =====
 USER ${ID}
 WORKDIR /home/${ID}
+RUN vim +PluginInstall +qall
 # ===================
 # TODO ...
