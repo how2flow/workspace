@@ -1,25 +1,27 @@
 # Dockerfile
 
+# Dockerfile with how2flow/config:{tag}
+
 # ===== No Edit =====
-FROM how2flow/config:ubuntu
+FROM how2flow/config:jammy
 # ===================
 
-ENV ID="jekyll" \
+# ===== Edit you want =====
+ENV ID="jekyll"
   PASSWORD="jekyll"
+# =========================
 
 # ===== No Edit =====
 USER root
 WORKDIR /root
 COPY fixups fixups
 RUN chmod -R +x fixups
+RUN ./fixups/postfix $ID $PASSWORD
 # ===================
 
-# ===== No Edit =====
-WORKDIR /root/fixups
-RUN ./postfix $ID $PASSWORD
-# ===================
-# TODO ...
-RUN ./pkg
+# TODO in /root ...
+RUN ./fixups/pkg
+
 # ===== No Edit =====
 RUN rm -rf fixups
 # ===================
@@ -27,7 +29,8 @@ RUN rm -rf fixups
 # ===== No Edit =====
 USER ${ID}
 WORKDIR /home/${ID}
-# ===================
-# TODO ...
 RUN vim +PluginInstall +qall
-RUN echo "export LC_ALL=C.UTF-8" >> .bashrc
+# ===================
+
+# TODO in /home/${ID} ...
+
