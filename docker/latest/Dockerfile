@@ -7,7 +7,7 @@ FROM how2flow/config:jammy
 # ===================
 
 # ===== Edit you want =====
-ENV ID="user"
+ENV ID="user" \
   PASSWORD="docker"
 # =========================
 

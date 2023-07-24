@@ -7,7 +7,7 @@ FROM how2flow/config:jammy
 # ===================
 
 # ===== Edit you want =====
-ENV ID="jekyll"
+ENV ID="jekyll" \
   PASSWORD="jekyll"
 # =========================
 
