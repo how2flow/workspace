@@ -1,3 +1,5 @@
+# Dockerfile
+
 # Dockerfile with how2flow/config:{tag}
 
 # ===== No Edit =====
@@ -11,17 +13,16 @@ ENV ID="user"
 
 # ===== No Edit =====
 USER root
-WORKDIR /root
-COPY fixups fixups
-RUN chmod -R +x fixups
-RUN ./fixups/postfix $ID $PASSWORD
+RUN /postfix.sh $ID $PASSWORD
 # ===================
 
-# TODO in /root ...
-RUN ./fixups/pkg
+# TODO with root permission ...
+ADD fixups /
+RUN /fixups/pkg
+RUN rm -rf fixups
 
 # ===== No Edit =====
-RUN rm -rf fixups
+RUN rm -f /*.sh
 # ===================
 
 # ===== No Edit =====
@@ -30,4 +31,5 @@ WORKDIR /home/${ID}
 RUN vim +PluginInstall +qall
 # ===================
 
-# TODO in /home/${ID} ...
+# TODO with normal permission in /home/${ID} ...
+
