@@ -1,8 +1,9 @@
 version: '3'
 
 volumes:
-  share_data: {}
+  bootloader: {}
   kernel: {}
+  share_data: {}
 
 services:
   workspace:
@@ -10,12 +11,12 @@ services:
     container_name: work-latest
     stdin_open: true
     tty: true
-    # optional
-#    devices:
-#      - /dev/ttyUSB0:/dev/ttyUSB0
+#   devices:
+#     - /dev/ttyUSB0:/dev/ttyUSB0
     volumes:
-      - share_data:/var/lib/share_data
+      - bootloader:/var/lib/bootloader
       - kernel:/var/lib/kernel
+      - share_data:/var/lib/share_data
     environment:
       - PYTHONUNBUFFERED=0
 
