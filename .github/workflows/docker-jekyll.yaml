@@ -25,7 +25,7 @@ jobs:
       - name: 'Docker upload'
         uses: how2flow/upload-docker-action@v1
         with:
-          context: 'docker/jekyll'
+          context: 'docker-ubuntu/jekyll'
           repository: 'workspace'
           release: 'jekyll'
           username: ${{ secrets.DOCKERHUB_USERNAME }}

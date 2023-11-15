@@ -20,7 +20,7 @@ jobs:
       - name: 'Docker upload'
         uses: how2flow/upload-docker-action@v1
         with:
-          context: 'docker/latest'
+          context: 'docker-ubuntu/latest'
           repository: 'workspace'
           release: 'latest'
           username: ${{ secrets.DOCKERHUB_USERNAME }}
