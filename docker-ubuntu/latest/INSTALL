@@ -1,0 +1,46 @@
+#!/bin/bash
+
+set -e
+
+COMPOSE="$(cd $(dirname $0); pwd -P)/docker-compose.yaml"
+DISTRO=${1:-latest}
+VOLUMES=("/mnt/docker/workspace/${DISTRO}/bootloader"
+         "/mnt/docker/workspace/${DISTRO}/kernel"
+         "/mnt/docker/workspace/${DISTRO}/share_data")
+
+if [ $EUID != 0 ]; then
+  echo "Run with root permission"
+  exit 0
+fi
+
+if [ -z "$(command -v docker)" ]; then
+  echo "You need to install docker"
+fi
+
+for volume in ${VOLUMES[@]}; do
+  if [ ! -d ${volume} ]; then
+    mkdir -p ${volume}
+  fi
+done
+
+cat ${COMPOSE} > ${COMPOSE}.old
+cat <<__EOF > ${COMPOSE}
+version: '3'
+
+services:
+  workspace:
+    image: how2flow/workspace:${DISTRO}
+    container_name: work-${DISTRO}
+    stdin_open: true
+    tty: true
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+    volumes:
+      - /mnt/docker/workspace/${DISTRO}/bootloader:/var/lib/bootloader
+      - /mnt/docker/workspace/${DISTRO}/kernel:/var/lib/kernel
+      - /mnt/docker/workspace/${DISTRO}/share_data:/var/lib/share_data
+    environment:
+      - PYTHONUNBUFFERED=0
+__EOF
+
+docker compose up -d

@@ -1,5 +1,6 @@
 # files
 *.log
+*.old
 *.swp
 *.tmp
 
