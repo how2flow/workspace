@@ -1,0 +1,42 @@
+#!/bin/bash
+
+set -e
+
+COMPOSE="$(cd $(dirname $0); pwd -P)/docker-compose.yaml"
+DISTRO="jekyll"
+VOLUMES=("/mnt/docker/workspace/${DISTRO}/share_data")
+
+if [ $EUID != 0 ]; then
+  echo "Run with root permission"
+  exit 0
+fi
+
+if [ -z "$(command -v docker)" ]; then
+  echo "You need to install docker"
+fi
+
+for volume in ${VOLUMES[@]}; do
+  if [ ! -d ${volume} ]; then
+    mkdir -p ${volume}
+  fi
+done
+
+cat ${COMPOSE} > ${COMPOSE}.old
+cat <<__EOF > ${COMPOSE}
+version: '3'
+
+services:
+  workspace:
+    image: how2flow/workspace:${DISTRO}
+    container_name: work-${DISTRO}
+    stdin_open: true
+    tty: true
+    volumes:
+      - /mnt/docker/workspace/${DISTRO}/share_data:/var/lib/share_data
+    environment:
+      - PYTHONUNBUFFERED=0
+    ports:
+      - 4000:4000
+__EOF
+
+docker compose up -d
