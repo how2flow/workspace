@@ -3,8 +3,10 @@
 set -e
 
 COMPOSE="$(cd $(dirname $0); pwd -P)/docker-compose.yaml"
-DISTRO="jekyll"
-VOLUMES=("/mnt/docker/workspace/${DISTRO}/share_data")
+CONTAINER_NAME="work-jekyll"
+PROJECT="workspace"
+TAG="jekyll"
+VOLUMES=("/mnt/docker/${PROJECT}/${TAG}/share_data")
 
 if [ $EUID != 0 ]; then
   echo "Run with root permission"
@@ -21,18 +23,19 @@ for volume in ${VOLUMES[@]}; do
   fi
 done
 
-cat ${COMPOSE} > ${COMPOSE}.old
-cat <<__EOF > ${COMPOSE}
+if [ -e ${COMPOSE} ]; then
+  cat ${COMPOSE} > ${COMPOSE}.old
+  cat <<__EOF > ${COMPOSE}
 version: '3'
 
 services:
-  workspace:
-    image: how2flow/workspace:${DISTRO}
-    container_name: work-${DISTRO}
+  ${PROJECT}:
+    image: how2flow/${PROJECT}:${TAG}
+    container_name: ${CONTAINER_NAME}
     stdin_open: true
     tty: true
     volumes:
-      - /mnt/docker/workspace/${DISTRO}/share_data:/var/lib/share_data
+      - /mnt/docker/${PROJECT}/${TAG}/share_data:/var/lib/share_data
     environment:
       - PYTHONUNBUFFERED=0
     ports:
@@ -40,3 +43,5 @@ services:
 __EOF
 
 docker compose up -d
+fi
+
