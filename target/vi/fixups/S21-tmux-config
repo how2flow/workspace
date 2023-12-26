@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TMUX_CONF="https://raw.githubusercontent.com/how2flow/config/master/ubuntu/tmux.conf"
+TMUX_CONF="https://raw.githubusercontent.com/how2flow/config/master/ubuntu/user/.tmux.conf"
 
 [ -e __HOME__/.tmux.conf ] && sudo rm -rf __HOME__/.tmux.conf
 wget -O __HOME__/.tmux.conf ${TMUX_CONF}
