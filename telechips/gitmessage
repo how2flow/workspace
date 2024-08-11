@@ -1,0 +1,25 @@
+# Classifier and Title
+# Classifier : bug/refactoring/feature/upgrade
+# Title :
+#  - Insert SPACE between Classifer and Title
+#  - Capitalize the subject line
+#  - Use the imperative mood in the subject line
+[bug/ref/fea/upg] 
+
+# Issus description(Optional)
+
+
+# Cause(Optional)
+
+
+# Content
+# Use the body to explain what and why vs. how
+
+
+Linked Commit:
+# The list of Git Repositories influenced by commit
+# Exmple
+# Linked Commit : kernel.git
+#  				  u-boot.git
+TCS:
+# Issue Tracking System(TIMS or TCS Ticket ID)

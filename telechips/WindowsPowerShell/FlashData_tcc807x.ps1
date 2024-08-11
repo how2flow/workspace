@@ -1,0 +1,33 @@
+# Define the path to fwdn.exe
+$fwdnExecutable = ".\fwdn.exe"
+
+# Define the directory path
+$directoryPath = "Z:\work1\tcc807x\boot-firmware"
+
+# Search for all files ending with fwdn.json and boot.json
+$fwdnFiles = Get-ChildItem -Path $directoryPath -Filter "*807*fwdn.json"
+$bootFiles = Get-ChildItem -Path $directoryPath -Filter "*807*boot.json"
+
+# Execute fwdn.json files
+foreach ($file in $fwdnFiles) {
+    Write-Host "Executing file: $($file.FullName) (command: --fwdn)"
+    & $fwdnExecutable --fwdn $file.FullName
+}
+
+# low-format
+Write-Host "Executing low-format command: --low-format --storage emmc"
+& $fwdnExecutable --low-format --storage emmc
+
+# Execute boot.json files
+foreach ($file in $bootFiles) {
+    Write-Host "Executing file: $($file.FullName) (command: --write)"
+    & $fwdnExecutable --write $file.FullName
+}
+
+# Execute additional command
+$additionalFile = "Z:\work1\tcc807x\boot-firmware\SD_Data.fai"
+$storageType = "emmc"
+$storageArea = "user"
+
+Write-Host "Executing additional command: $additionalFile (command: --write --storage $storageType --area $storageArea)"
+& $fwdnExecutable --write $additionalFile --storage $storageType --area $storageArea
