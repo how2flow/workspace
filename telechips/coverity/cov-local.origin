@@ -1,0 +1,31 @@
+#!/bin/sh
+
+WORK_PATH=$PWD
+IDIR_PATH=$WORK_PATH/idir
+
+if [ ! -d "$IDIR_PATH" ]; then
+	echo "[ERROR] Cannot find $IDIR_PATH. Please run cov-analyze" >&2
+	exit 1
+fi
+
+if [ -e "$WORK_PATH/coverity.conf" ]; then
+	echo "[INFO] $WORK_PATH/coverity.conf file already exists."
+else
+	cp $HOME/.coverity/coverity_local.conf coverity.conf
+fi
+
+SUMMARIES_PATH=$IDIR_PATH/output/exported-summaries/summaries
+SETTINGS_PATH=$IDIR_PATH/output/analysis-settings.json
+if [ ! -e "$SUMMARIES_PATH" ] || [ ! -e "$SETTINGS_PATH" ]; then
+	echo "[ERROR] One or more required files not found. Please retry cov-anlyze" >&2
+	echo "[ERROR] |-- $SUMMARIES_PATH" >&2
+	echo "[ERROR] |-- $SETTINGS_PATH" >&2
+	exit 1
+fi
+
+cov-run-desktop --disconnected --setup --skip-build
+cp $SUMMARIES_PATH $IDIR_PATH/emit/desktop-cache
+cp $SETTINGS_PATH $IDIR_PATH/emit/desktop-cache
+
+echo "[DONE] Done coverity settings for local analysis."
+

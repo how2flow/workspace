@@ -1,0 +1,537 @@
+#!/bin/sh
+
+WORK_PATH=${PWD}
+IDIR_PATH=${WORK_PATH}/idir
+AUTH_FILE=$HOME/.coverity/authkeys/ak-coverity.telechips.com-8443
+COV_HOST="https://coverity.telechips.com:8443"
+
+
+ALL_DEFECT_CNT=0
+
+function csv_to_markdown_type3() {
+	local INPUT_CSV="$1"
+	local OUTPUT_MARK="$2"
+
+	# Create the Markdown table header
+	echo "| No | Module | File | Rule Violation | Count | Justification | Line Number | 테스트 결함(TCS Link) | 비고 |" > ${OUTPUT_MARK}
+	echo "|----|--------|------|----------------|-------|---------------|-------------|-----------------------|------|" >> ${OUTPUT_MARK}
+
+	# Read the CSV file and process items with the same mergeKey
+	# $1: mergeKey
+	# $2: File
+	# $3: Rule Violation
+	# $4: Line Number
+	# $5: Summary
+	# $6: Detailed Description
+	# $7: cid
+	awk -F',' -v FPAT='[^,]*|"[^"]*"' -v module="${MODULE}" '{
+		if (NR > 1) {
+			gsub("\"", "", $2);
+			gsub("\"", "", $3);
+			gsub("\"", "", $4);
+			gsub("\"", "", $5);
+			gsub(/\|/, "\\|", $5);
+			gsub("\"", "", $6);
+			gsub(/\*/, "\\*", $6);
+			gsub(/\|/, "\\|", $6);
+			gsub("\"", "", $7);
+
+			if (!defect_idx[$1]) {
+				uniq_idx++;
+				defect_idx[$1] = uniq_idx;
+				file[uniq_idx] = $2;
+				rule[uniq_idx] = $3;
+				count[uniq_idx] = 1;
+				description[uniq_idx] = $2 ":" $4 ":<br>" $6;
+				line_numbers[uniq_idx] = $4;
+				cid[uniq_idx] = "CID:" $7
+			} else {
+				count[defect_idx[$1]]++;
+				description[defect_idx[$1]] = description[defect_idx[$1]] "<br>" $2 ":" $4 ":<br>" $6;
+				line_numbers[defect_idx[$1]] = line_numbers[defect_idx[$1]] ", " $4;
+			}
+		} else {
+			uniq_idx = 0;
+		}
+	} END {
+		for (idx in file) {
+			printf "| %d | %s | %s | %s | %d | **Detailed Description** <br> %s <br><br> **Justification** <br><br> | %s | - | %s |\n", idx, module, file[idx], rule[idx], count[idx], description[idx], line_numbers[idx], cid[idx];
+		}
+	}' "${INPUT_CSV}" >> "${OUTPUT_MARK}"
+
+	DEFECT_CNT=$(tail -n +2 "${INPUT_CSV}" | wc -l)
+	ALL_DEFECT_CNT=$((ALL_DEFECT_CNT + DEFECT_CNT))
+	echo "[INFO] Make ${OUTPUT_MARK}" ... Total Count: "${DEFECT_CNT}"
+}
+
+function csv_to_markdown_type2() {
+	local INPUT_CSV="$1"
+	local OUTPUT_MARK="$2"
+
+	# Create the Markdown table header
+	echo "| No | Module | File | Rule Violation | Count | Justification | Line Number | 테스트 결함(TCS Link) | 비고 |" > ${OUTPUT_MARK}
+	echo "|----|--------|------|----------------|-------|---------------|-------------|-----------------------|------|" >> ${OUTPUT_MARK}
+
+	# Read the CSV file and process items with the same mergeKey
+	# $1: mergeKey
+	# $2: File
+	# $3: Rule Violation
+	# $4: Line Number
+	# $5: Summary
+	# $6: Detailed Description
+	awk -F',' -v FPAT='[^,]*|"[^"]*"' -v module="${MODULE}" '{
+		if (NR > 1) {
+			gsub("\"", "", $2);
+			gsub("\"", "", $3);
+			gsub("\"", "", $4);
+			gsub("\"", "", $5);
+			gsub(/\|/, "\\|", $5);
+			gsub("\"", "", $6);
+			gsub(/\*/, "\\*", $6);
+			gsub(/\|/, "\\|", $6);
+
+			if (!defect_idx[$1]) {
+				uniq_idx++;
+				defect_idx[$1] = uniq_idx;
+				file[uniq_idx] = $2;
+				rule[uniq_idx] = $3;
+				count[uniq_idx] = 1;
+				summary[uniq_idx] = $5;
+				description[uniq_idx] = $2 ":" $4 ":<br>" $6;
+				line_numbers[uniq_idx] = $4;
+			} else {
+				count[defect_idx[$1]]++;
+				description[defect_idx[$1]] = description[defect_idx[$1]] "<br>" $2 ":" $4 ":<br>" $6;
+				line_numbers[defect_idx[$1]] = line_numbers[defect_idx[$1]] ", " $4;
+			}
+		} else {
+			uniq_idx = 0;
+		}
+	} END {
+		for (idx in file) {
+			printf "| %d | %s | %s | %s | %d | **Summary** <br> %s <br><br> **Detailed Description** <br> %s <br><br> **Justification** <br><br> | %s | - | - |\n", idx, module, file[idx], rule[idx], count[idx], summary[idx], description[idx], line_numbers[idx];
+		}
+	}' "${INPUT_CSV}" >> "${OUTPUT_MARK}"
+
+	DEFECT_CNT=$(tail -n +2 "${INPUT_CSV}" | wc -l)
+	ALL_DEFECT_CNT=$((ALL_DEFECT_CNT + DEFECT_CNT))
+	echo "[INFO] Make ${OUTPUT_MARK}" ... Total Count: "${DEFECT_CNT}"
+}
+
+function csv_to_markdown_type1() {
+	local INPUT_CSV="$1"
+	local OUTPUT_MARK="$2"
+
+	# Create the Markdown table header
+	echo "| Module | File | Rule Violation | Count | Justification | Line Number |" > ${OUTPUT_MARK}
+	echo "|--------|------|----------------|-------|---------------|-------------|" >> ${OUTPUT_MARK}
+
+	# Read the CSV file and process items with the same mergeKey
+	# $1: mergeKey
+	# $2: File
+	# $3: Rule Violation
+	# $4: Line Number
+	# $5: Summary
+	# $6: Detailed Description
+	awk -F',' -v FPAT='[^,]*|"[^"]*"' -v module="${MODULE}" '{
+		if (NR > 1) {
+			gsub("\"", "", $2);
+			gsub("\"", "", $3);
+			gsub("\"", "", $4);
+			gsub("\"", "", $5);
+			gsub(/\|/, "\\|", $5);
+			gsub("\"", "", $6);
+			gsub(/\*/, "\\*", $6);
+			gsub(/\|/, "\\|", $6);
+
+			if (!defect_idx[$1]) {
+				uniq_idx++;
+				defect_idx[$1] = uniq_idx;
+				file[uniq_idx] = $2;
+				rule[uniq_idx] = $3;
+				count[uniq_idx] = 1;
+				summary[uniq_idx] = $5;
+				description[uniq_idx] = $2 ":" $4 ":<br>" $6;
+				line_numbers[uniq_idx] = $4;
+			} else {
+				count[defect_idx[$1]]++;
+				description[defect_idx[$1]] = description[defect_idx[$1]] "<br>" $2 ":" $4 ":<br>" $6;
+				line_numbers[defect_idx[$1]] = line_numbers[defect_idx[$1]] ", " $4;
+			}
+		} else {
+			uniq_idx = 0;
+		}
+	} END {
+		for (idx in file) {
+			printf "| %s | %s | %s | %d | **Summary** <br> %s <br><br> **Detailed Description** <br> %s <br><br> **Justification** <br><br> | %s |\n", module, file[idx], rule[idx], count[idx], summary[idx], description[idx], line_numbers[idx];
+		}
+	}' "${INPUT_CSV}" >> "${OUTPUT_MARK}"
+
+	DEFECT_CNT=$(tail -n +2 "${INPUT_CSV}" | wc -l)
+	ALL_DEFECT_CNT=$((ALL_DEFECT_CNT + DEFECT_CNT))
+	echo "[INFO] Make ${OUTPUT_MARK}" ... Total Count: "${DEFECT_CNT}"
+}
+
+function json_to_csv() {
+	local mergeKey=$(jq -r '.mergeKey' <<< "$1")
+	local filePathname=$(jq -r '.strippedMainEventFilePathname' <<< "$1")
+	local checkerName=$(jq -r '.checkerName' <<< "$1")
+	local lineNumber=$(jq -r '.mainEventLineNumber' <<< "$1")
+	local summary=$(jq -r '.checkerProperties.subcategoryLongDescription' <<< "$1")
+
+	# Extract eventDescription if events.main is true
+	local detailedDescription=$(jq -r '.events[] | select(.main == true).eventDescription' <<< "$1")
+
+	local cid=""
+	if [ "$(jq -r '.stateOnServer' <<< "$1")" != "null" ]; then
+		cid=$(jq -r '.stateOnServer.cid' <<< "$1")
+	fi
+
+	local localStatus=$(jq -r '.localStatus' <<< "$1")
+
+	# Remove \" for CSV format
+	detailedDescription="${detailedDescription//\"/}"
+
+	echo "\"$mergeKey\",\"$filePathname\",\"$checkerName\",\"$lineNumber\",\"$summary\",\"$detailedDescription\",\"$cid\",\"$localStatus\"" >> ${DEFECTS_CSV}
+}
+
+function prev_to_csv() {
+	DEFECTS_CSV="${LOCAL_COV_STREAM_PATH}/defects_list.csv"
+	echo -n "[INFO] Make ${DEFECTS_CSV} ... "
+	echo "mergeKey,File,Rule Violation,Line Number,Detailed Description,CID,Comment" > ${DEFECTS_CSV}
+	ISSUES=$(jq -c '.issueInfo[]' ${PREV_JSON})
+	while IFS= read -r ISSUE; do
+		echo "$ISSUE" | jq -r '. | .mergeKey as $mergeKey | .cid as $cid | .triage.lastTriageComment as $comment | .occurrences[] | "\"\($mergeKey)\",\"\(.file)\",\"\(.checker)\",\"\(.mainEventLineNumber)\",\"\(.mainEventDescription|gsub("\""; ""))\",\"\($cid)\",\"\($comment)\""' >> "$DEFECTS_CSV"
+	done <<< "${ISSUES}"
+	echo "Done"
+}
+
+check_authkey() {
+	if [ ! -e "${AUTH_FILE}" ]; then
+		echo "[INFO] authkeys doesn't exist. Creating authkey ..."
+		mkdir -p $HOME/.coverity/authkeys
+
+		read -p "Please enter user: " AUTH_USER
+		read -p "Please enter password: " AUTH_PSWD
+		#cov-run-desktop --create-auth-key --stream "${AUTH_STREAM}"
+		cov-manage-im --mode auth-key --create --url "https://coverity.telechips.com:8443" --user "${AUTH_USER}" --password "${AUTH_PSWD}" --output-file ${AUTH_FILE}
+		if [ $? -ne 0 ]; then
+			echo "[ERROR] Failed to create authkey. Please check the account" >&2
+			exit 1
+		fi
+	fi
+}
+
+########## main ##########
+
+if [ ! -d "${IDIR_PATH}" ]; then
+	echo "[ERROR] Cannot find ${IDIR_PATH}. Please run cov-analyze" >&2
+	exit 1
+fi
+
+case "$1" in
+	setup)
+		if [ -e "${WORK_PATH}/coverity.conf" ]; then
+			echo "[INFO] ${WORK_PATH}/coverity.conf file already exists."
+		else
+			cp $HOME/.coverity/coverity_local.conf coverity.conf
+		fi
+
+		# Check authkey
+		check_authkey
+
+		# Check local analysis
+		echo " (1) Analysis based local data"
+		echo " (2) Analysis based specific stream and snapshot id"
+		read -p "1. Choose analysis mode: " ANALYSIS_MODE
+		if [ "${ANALYSIS_MODE}" -eq 1 ]; then
+			# local
+			SUMMARIES_PATH=${IDIR_PATH}/output/exported-summaries/summaries
+			SETTINGS_PATH=${IDIR_PATH}/output/analysis-settings.json
+			if [ ! -e ${SUMMARIES_PATH} ] || [ ! -e ${SETTINGS_PATH} ]; then
+				echo "[ERROR] One or more required files not found. Please retry cov-anlyze" >&2
+				echo "[ERROR] |-- ${SUMMARIES_PATH}" >&2
+				echo "[ERROR] |-- ${SETTINGS_PATH}" >&2
+				exit 1
+			fi
+
+			cov-run-desktop --disconnected --setup --skip-build
+			cp ${SUMMARIES_PATH} ${IDIR_PATH}/emit/desktop-cache/
+			cp ${SETTINGS_PATH} ${IDIR_PATH}/emit/desktop-cache/
+		elif [ "${ANALYSIS_MODE}" -eq 2 ]; then
+			# stream and snapshot id
+			echo "[ERROR] Unsupported this analysis mode." >&2
+			exit 1
+#			read -p " 1-2. Enter stream name: " COV_STREAM
+#			cov-run-desktop --stream LINUX-kernel-5.10-core --reference-snapshot id:10192 --setup --skip-build
+#			echo ""
+		else
+			echo "[ERROR] Please choose analysis mode." >&2
+			exit 1
+		fi
+
+		echo "[DONE] Done coverity settings for local analysis."
+		;;
+	dr_server)
+		# Create local-coverity folder in WORK_PATH
+		LOCAL_COV_SERVER_PATH=${WORK_PATH}/local-coverity/server
+		mkdir -p ${LOCAL_COV_SERVER_PATH}
+
+		# Check authkey
+		check_authkey
+
+		# Enter stream name
+		read -p "1. Enter stream name: " COV_STREAM
+		if [ -z "${COV_STREAM}" ]; then
+			echo "[ERROR] Please enter stream name." >&2
+			exit 1
+		else
+			echo "${COV_STREAM}" > ${LOCAL_COV_SERVER_PATH}/stream.txt
+		fi
+
+		read -p "2. Enter component (ex. <comp_map_name>.<comp_name>): " COV_COMP
+		if [ -z "${COV_COMP}" ]; then
+			echo "[ERROR] Please enter component name." >&2
+			exit 1
+		else
+			echo "${COV_COMP}" > ${LOCAL_COV_SERVER_PATH}/component.txt
+		fi
+
+		OUT_FILE="${LOCAL_COV_SERVER_PATH}/defects_${COV_STREAM}_${COV_COMP}.csv"
+		cov-manage-im --mode defects --show --url "${COV_HOST}" --auth-key-file ${AUTH_FILE} \
+			--stream "${COV_STREAM}" --component "${COV_COMP}" --output-file "${OUT_FILE}" \
+			--fields stream-name,component,cid,file,function,checker,classification,action,owner
+		if [ $? -ne 0 ]; then
+			echo "[ERROR] Failed to get defect list from coverity server." >&2
+			echo "[EEROR] |-- stream   : ${COV_STREAM}" >&2
+			echo "[EEROR] |-- component: ${COV_COMP}" >&2
+			exit 1
+		fi
+
+		echo "[DONE] Success to get defect list from coverity server. Please check the file:"
+		echo "       |-- ${OUT_FILE}"
+
+		;;
+	dr_local)
+		# Check if jq is available
+		if ! command -v jq > /dev/null; then
+			echo "[ERROR] jq command not found. Please install jq." >&2
+			exit 1
+		fi
+
+		# Check  cov-analyze
+		read -p "1. Did you run cov-analyze? (y/n): " ANSWER
+		if [ "${ANSWER}" != "y" ]; then
+			echo "[ERROR] Please run cov-analyze." >&2
+			exit 1
+		fi
+
+		# Enter module name
+		read -p "2. Enter module name: " MODULE
+		if [ -z "${MODULE}" ]; then
+			echo "[ERROR] Please enter module name." >&2
+			exit 1
+		fi
+
+		# Create local-coverity folder in WORK_PATH
+		LOCAL_COV_PATH=${WORK_PATH}/local-coverity
+		mkdir -p ${LOCAL_COV_PATH}
+
+		# Enter report type
+		echo "         ------------------------------------------------------------------------"
+		echo " Type 1  | Module | File | Rule Violation | Count | Justification | Line Number |"
+		echo "         ------------------------------------------------------------------------"
+		echo "         ------------------------------------------------------------------------------------------------------------"
+		echo " Type 2  | No | Module | File | Rule Violation | Count | Justification | Line Number | 테스트 결함(TCS Link) | 비고 |"
+		echo "         ------------------------------------------------------------------------------------------------------------"
+		echo "         ------------------------------------------------------------------------------------------------------------"
+		echo " Type 3  | No | Module | File | Rule Violation | Count | Justification | Line Number | 테스트 결함(TCS Link) | CID  |"
+		echo "         ------------------------------------------------------------------------------------------------------------"
+		read -p "3. Enter report type: " REPORT_TYPE
+		if [ "${REPORT_TYPE}" != "1" ] && [ "${REPORT_TYPE}" != "2" ] && [ "${REPORT_TYPE}" != "3" ]; then
+			echo "[ERROR] Please enter report type." >&2
+			exit 1
+		fi
+
+		########### Check if filter_files exists ###########
+		if [ ! -e "${LOCAL_COV_PATH}/filter_files" ]; then
+			echo "[ERROR] ${LOCAL_COV_PATH}/filter_files not found. Please create the file with one filename per line." >&2
+			echo "  This is example:"
+			echo "a/a.c"
+			echo "b/b/c.c"
+			echo "c/c/c/c.c"
+			touch ${LOCAL_COV_PATH}/filter_files
+			exit 1
+		fi
+
+		# Read filter_files and append each line to FILTERS variable with "|"
+		FILTERS=""
+		while IFS= read -r LINE; do
+			FILTERS="${FILTERS}${LINE}|"
+		done < "${LOCAL_COV_PATH}/filter_files"
+		# Remove trailing "|"
+		FILTERS=$(echo ${FILTERS} | sed 's/|$//')
+
+		echo "[INFO] Filters read from filter_files:"
+		echo "       |-- ${FILTERS}"
+
+		########### Make defects list ###########
+		DEFECTS_JSON="${LOCAL_COV_PATH}/defects_list.json"
+		echo -n "[INFO] Make ${DEFECTS_JSON} ... "
+		cov-format-errors --dir ${IDIR_PATH} --no-default-triage-filters --sort file:d,line --include-files ${FILTERS} --json-output-v10 ${DEFECTS_JSON}
+		#cov-format-errors --dir ${IDIR_PATH} --no-default-triage-filters --sort file:d,line --include-files ${FILTERS} --json-output-v10 ${DEFECTS_JSON} --preview-report-v2 preview_report_core.json
+		#cov-run-desktop --json-output-v10 ${DEFECTS_JSON} --stream LINUX-kernel-5.10-core --reference-snapshot id:10192 --include-missing-locally true @@${LOCAL_COV_PATH}/filter_files
+		echo "Done"
+
+		########### json to csv ###########
+		DEFECTS_CSV="${LOCAL_COV_PATH}/defects_list.csv"
+		echo -n "[INFO] Make ${DEFECTS_CSV} ... "
+		echo "mergeKey,File,Rule Violation,Line Number,Summary,Detailed Description,CID,Local" > ${DEFECTS_CSV}
+		ISSUES=$(jq -c '.issues[]' ${DEFECTS_JSON})
+		while IFS= read -r ISSUE; do
+			json_to_csv "${ISSUE}"
+		done <<< "${ISSUES}"
+		echo "Done"
+
+		# Make sub defect list
+		DEFECT_MISRA="${LOCAL_COV_PATH}/defects_list_misra.csv"
+		DEFECT_CERT="${LOCAL_COV_PATH}/defects_list_cert.csv"
+		DEFECT_CODE="${LOCAL_COV_PATH}/defects_list_code.csv"
+		DEFECT_RUNTIME="${LOCAL_COV_PATH}/defects_list_runtime.csv"
+
+		# Make csv header
+		head -n 1 ${DEFECTS_CSV} > ${DEFECT_MISRA}
+		head -n 1 ${DEFECTS_CSV} > ${DEFECT_CERT}
+		head -n 1 ${DEFECTS_CSV} > ${DEFECT_CODE}
+		head -n 1 ${DEFECTS_CSV} > ${DEFECT_RUNTIME}
+
+		# Split csv files:  MISRA, CERT, CODE(HIs), RUNTIME
+		awk -F, 'NR>1 {
+			if ($3 ~ /^""/) {}
+			else if ($3 ~ /^"MISRA/) { print $0 >> "'${DEFECT_MISRA}'" }
+			else if ($3 ~ /^"CERT/) { print $0 >> "'${DEFECT_CERT}'" }
+			else if ($3 ~ /^"HIS/) { print $0 >> "'${DEFECT_CODE}'" }
+			else { print $0 >> "'${DEFECT_RUNTIME}'" }
+		}' ${DEFECTS_CSV}
+
+		echo "[INFO] Output files:"
+		echo "       |-- ${DEFECT_MISRA}"
+		echo "       |-- ${DEFECT_CERT}"
+		echo "       |-- ${DEFECT_RUNTIME}"
+		echo "       |-- ${DEFECT_CODE}"
+
+		########### Make markdown format ###########
+		mkdir -p "${LOCAL_COV_PATH}/markdown"
+		MARK_MISRA="${LOCAL_COV_PATH}/markdown/mark_misra.md"
+		MARK_CERT="${LOCAL_COV_PATH}/markdown/mark_cert.md"
+		MARK_RUNTIME="${LOCAL_COV_PATH}/markdown/mark_runtime.md"
+		MARK_CODE="${LOCAL_COV_PATH}/markdown/mark_code.md"
+		if [ "${REPORT_TYPE}" -eq 1 ]; then
+			csv_to_markdown_type1 "${DEFECT_MISRA}" "${MARK_MISRA}"
+			csv_to_markdown_type1 "${DEFECT_CERT}" "${MARK_CERT}"
+			csv_to_markdown_type1 "${DEFECT_RUNTIME}" "${MARK_RUNTIME}"
+			csv_to_markdown_type1 "${DEFECT_CODE}" "${MARK_CODE}"
+		elif [ "${REPORT_TYPE}" -eq 2 ]; then
+			csv_to_markdown_type2 "${DEFECT_MISRA}" "${MARK_MISRA}"
+			csv_to_markdown_type2 "${DEFECT_CERT}" "${MARK_CERT}"
+			csv_to_markdown_type2 "${DEFECT_RUNTIME}" "${MARK_RUNTIME}"
+			csv_to_markdown_type2 "${DEFECT_CODE}" "${MARK_CODE}"
+		elif [ "${REPORT_TYPE}" -eq 3 ]; then
+			csv_to_markdown_type3 "${DEFECT_MISRA}" "${MARK_MISRA}"
+			csv_to_markdown_type3 "${DEFECT_CERT}" "${MARK_CERT}"
+			csv_to_markdown_type3 "${DEFECT_RUNTIME}" "${MARK_RUNTIME}"
+			csv_to_markdown_type3 "${DEFECT_CODE}" "${MARK_CODE}"
+		else
+			echo "[ERROR] Not supported report type: ${REPORT_TYPE}" >&2
+			exit 1
+		fi
+
+		echo "[INFO] |-- All Defect Count: ${ALL_DEFECT_CNT}"
+		echo ""
+
+		echo "[DONE] Completed to generate defect report in local-coverity folder."
+
+		########### Check Line of Code ###########
+		if ! command -v cloc > /dev/null; then
+			echo "[ERROR] cloc command not found. Please install cloc." >&2
+			exit 1
+		fi
+		echo ""
+		echo "[INFO] Line of Code (LOC)"
+		cloc --quiet --hide-rate --by-file --list-file local-coverity/filter_files
+
+		;;
+	dr_stream)
+		# Create local-coverity folder in WORK_PATH
+		LOCAL_COV_STREAM_PATH=${WORK_PATH}/local-coverity/stream
+		mkdir -p ${LOCAL_COV_STREAM_PATH}
+
+		# Check  cov-analyze
+		read -p "1. Did you run cov-analyze? (y/n): " ANSWER
+		if [ "${ANSWER}" != "y" ]; then
+			echo "[ERROR] Please run cov-analyze." >&2
+			exit 1
+		fi
+
+		# Enter stream name
+#		read -p "2. Enter stream name: " COV_STREAM
+#		if [ -z "${COV_STREAM}" ]; then
+#			echo "[ERROR] Please enter stream name." >&2
+#			exit 1
+#		else
+#			cov-manage-im --mode streams --show --url "$COV_HOST" --auth-key-file ${AUTH_FILE} \
+#				--stream "${COV_STREAM}" --output-file ${LOCAL_COV_STREAM_PATH}/stream.txt \
+#				--no-headers --fields stream
+#			if [ $? -ne 0 ]; then
+#				echo "[ERROR] Invalid stream name." >&2
+#				exit 1
+#			fi
+#		fi
+
+		#COV_STREAM=LINUX-kernel-5.10-core
+		COV_STREAM=MOBIS_CCNC_BASIC-u-boot
+
+		########### get prev json ###########
+		PREV_JSON="${LOCAL_COV_STREAM_PATH}/preview-report_${COV_STREAM}.json"
+#		cov-commit-defects --dir idir --url ${COV_HOST} --auth-key-file ${AUTH_FILE} \
+#			--stream "${COV_STREAM}" --preview-report-v3 "${PREV_JSON}" \
+#			--include-files drivers/dma/tcc-dma.c
+		cov-commit-defects --dir idir --url ${COV_HOST} --auth-key-file ${AUTH_FILE} \
+			--stream "${COV_STREAM}" --preview-report-v3 "${PREV_JSON}"
+		if [ $? -ne 0 ]; then
+			echo "[ERROR] Failed to download preview-report." >&2
+			exit 1
+		fi
+
+		########### json to csv ###########
+		prev_to_csv
+
+		;;
+	oss)
+		# Create local-coverity folder in WORK_PATH
+		LOCAL_COV_PATH=${WORK_PATH}/local-coverity
+		mkdir -p ${LOCAL_COV_PATH}
+
+		if [ ! -e "${LOCAL_COV_PATH}/filter_files" ]; then
+			echo "[ERROR] ${LOCAL_COV_PATH}/filter_files not found. Please create the file with one filename per line." >&2
+			echo "  This is example:"
+			echo "a/a.c"
+			echo "b/b/c.c"
+			echo "c/c/c/c.c"
+			exit 1
+		fi
+
+		echo "[INFO] Create ${LOCAL_COV_PATH}/oss.tar"
+		rm -rdf ${LOCAL_COV_PATH}/oss*
+		mkdir -p ${LOCAL_COV_PATH}/oss
+		cp --parents `cat local-coverity/filter_files` ${LOCAL_COV_PATH}/oss
+		cd ${LOCAL_COV_PATH}
+		tar -cf oss.tar oss
+		cd ${WORK_PATH}
+
+		;;
+	*)
+		echo "Usage: cov-local {setup|dr_server|dr_local|dr_stream|oss}" >&2
+		exit 1
+		;;
+esac
