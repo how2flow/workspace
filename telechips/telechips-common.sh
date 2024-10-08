@@ -21,15 +21,6 @@ setup_bootloader() {
   esac
 }
 
-setup_kernel() {
-  local pref=$1
-
-  for ver in ${k_vers[@]}; do
-    git clone ssh://git@bitbucket.telechips.com:7999/linux/kernel-${ver}-core.git -b dev ${pref}/main/kernel-${ver}
-    git clone ssh://git@bitbucket.telechips.com:7999/linux/kernel-${ver}-core.git -b dev ${pref}/sub/kernel-${ver}
-  done
-}
-
 setup_initramfs() {
   local pref=$1
   local board=$2
