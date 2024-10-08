@@ -34,6 +34,7 @@ setup_bootloader ${prefix} ${board}
 setup_kernel ${prefix} ${board}
 setup_initramfs ${prefix} ${board}
 setup_mkmmc ${prefix}/boot-firmware ${board}
+setup_tf-a ${prefix} ${board}
 
 # copy ps1 script to window power shell dir
 echo ""

@@ -192,3 +192,10 @@ setup_mkufs() {
     fi
   done
 }
+
+setup_tf-a() {
+  local pref=$1
+  local board=$2
+
+  git clone ssh://git@bitbucket.telechips.com:7999/firmware/trusted-firmware-a.git -b ${board} ${pref}/tf-a
+}
