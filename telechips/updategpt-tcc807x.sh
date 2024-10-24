@@ -23,4 +23,3 @@ subcore_misc:1024k@
 subcore_env:16k@
 data:0k@
 __EOF
-echo 1
