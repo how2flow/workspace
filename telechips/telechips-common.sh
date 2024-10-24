@@ -193,6 +193,13 @@ setup_mkufs() {
   done
 }
 
+setup_scfw() {
+  local pref=$1
+  local board=$2
+
+  git clone ssh://git@bitbucket.telechips.com:7999/firmware/scfw.git -b dev/${board} ${pref}/scfw
+}
+
 setup_tf-a() {
   local pref=$1
   local board=$2
