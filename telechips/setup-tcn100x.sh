@@ -11,7 +11,7 @@ if [ -d ${prefix} ]; then
 fi
 
 mkdir -p ${prefix}
-mkdir -p ${prefix}/main ${prefix}/sub
+mkdir -p ${prefix}/main
 
 # set boot-firmware
 git clone ssh://git@bitbucket.telechips.com:7999/firmware/boot-firmware.git -b ${board} ${prefix}/boot-firmware

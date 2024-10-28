@@ -19,6 +19,6 @@ splash:4096k@
 home:512000k@
 a7s_boot:8192k@${prefix}/sub/kernel-@@VERSION@@/arch/arm/boot/Image
 a7s_dtb:200k@${prefix}/sub/kernel-@@VERSION@@/arch/arm/boot/dts/telechips/${board}/tcc8030-subcore-lpd4321.dtb
-a7s_root:20480k@${prefix}/sub/kernel-@@VERSION@@/initramfs.cpio.lzo
+a7s_root:20480k@${prefix}/sub/kernel-@@VERSION@@/initramfs32.cpio.lzo
 data:0k@
 __EOF

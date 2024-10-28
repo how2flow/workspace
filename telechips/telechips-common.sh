@@ -43,14 +43,14 @@ setup_initramfs() {
   fi
 
   # set initramfs #
-  if [ -f ${HOME}/initramfs.cpio.lzo ]; then
+  if [ -f ${HOME}/initramfs32.cpio.lzo ]; then
     for ver in ${k_vers[@]}; do
       if [[ ${ver} != "5.10" && ${board} == "tcc897x" ]]; then
         continue
       fi
       ln -s ${HOME}/initramfs32.cpio.lzo ${pref}/main/kernel-${ver}/
       case ${board} in
-        tcc805x|tcc807x)
+        tcc803x)
           ln -s ${HOME}/initramfs32.cpio.lzo ${pref}/sub/kernel-${ver}/
           ;;
       esac
@@ -70,7 +70,7 @@ setup_kernel() {
     fi
     git clone ssh://git@bitbucket.telechips.com:7999/linux/kernel-${ver}-core.git -b dev ${pref}/main/kernel-${ver}
     case ${board} in
-      tcc805x|tcc807x)
+      tcc803x|tcc805x|tcc807x)
         git clone ssh://git@bitbucket.telechips.com:7999/linux/kernel-${ver}-core.git -b dev ${pref}/sub/kernel-${ver}
         ;;
     esac
@@ -100,14 +100,38 @@ echo "NEED: ./mklinuxmtdimg_64bit.sh"
 echo "====================================================="
 __EOF
       ;;
-    tcc803x|tcc805x|tcc807x|tcn100x)
+    tcc803x)
       cat << __EOF > ${pref}/main/kernel-${ver}/scripts/envsetup.sh
 #!/bin/bash
 
 export ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu-
 echo "====================================================="
 echo "ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu-"
-echo "NEED: make ${board}_defconfig telechips_mmc_boot.config (tcc805x or tcc807x)"
+echo "NEED: make ${board}_defconfig"
+echo "NEED: make -j$(nproc)"
+echo "NEED: ./mklinuxmtdimg_64bit.sh"
+echo "====================================================="
+__EOF
+      cat << __EOF > ${pref}/sub/kernel-${ver}/scripts/envsetup.sh
+#!/bin/bash
+
+export ARCH=arm64 CROSS_COMPILE=arm-none-linux-gnueabihf-
+echo "====================================================="
+echo "ARCH=arm64 CROSS_COMPILE=arm-none-linux-gnueabihf-"
+echo "NEED: make ${board}_subcore_defconfig"
+echo "NEED: make -j$(nproc)"
+echo "NEED: ./mklinuxmtdimg_32bit.sh"
+echo "====================================================="
+__EOF
+      ;;
+    tcc805x|tcc807x)
+      cat << __EOF > ${pref}/main/kernel-${ver}/scripts/envsetup.sh
+#!/bin/bash
+
+export ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu-
+echo "====================================================="
+echo "ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu-"
+echo "NEED: make ${board}_defconfig telechips_mmc_boot.config"
 echo "NEED: make -j$(nproc)"
 echo "NEED: ./mklinuxmtdimg_64bit.sh"
 echo "====================================================="
@@ -118,7 +142,20 @@ __EOF
 export ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu-
 echo "====================================================="
 echo "ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu-"
-echo "NEED: make ${board}_subcore_defconfig telechips_mmc_boot.config (tcc805x or tcc807x)"
+echo "NEED: make ${board}_subcore_defconfig telechips_mmc_boot.config"
+echo "NEED: make -j$(nproc)"
+echo "NEED: ./mklinuxmtdimg_64bit.sh"
+echo "====================================================="
+__EOF
+      ;;
+    tcn100x)
+      cat << __EOF > ${pref}/main/kernel-${ver}/scripts/envsetup.sh
+#!/bin/bash
+
+export ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu-
+echo "====================================================="
+echo "ARCH=arm64 CROSS_COMPILE=aarch64-none-linux-gnu-"
+echo "NEED: make ${board}_defconfig"
 echo "NEED: make -j$(nproc)"
 echo "NEED: ./mklinuxmtdimg_64bit.sh"
 echo "====================================================="
