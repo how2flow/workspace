@@ -219,6 +219,9 @@ setup_mkufs() {
     tcc807x)
       echo "./tools/mktcimg/mktcimg --parttype gpt --storage_size 63988301824 --fplist tools/mktcimg/gpt_partition.list --outfile SD_Data.fai --area_name "SD Data" --gptfile SD_Data.gpt --sector_size 4096" >> ${pref}/mksh_ufs_${ver}.sh
       ;;
+    tca200x)
+      echo "./tools/mktcimg/mktcimg --parttype gpt --storage_size 7818182656 --fplist tools/mktcimg/gpt_partition.list --outfile SD_Data.fai --area_name 'SD Data' --gptfile SD_Data.gpt" >> ${pref}/mksh_ufs_${ver}.sh
+      ;;
     *)
       echo "${board} is not supported!!"
       ;;

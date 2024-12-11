@@ -8,6 +8,7 @@ SETUP_LIST=(
   "tcc805x"
   "tcc807x"
   "tcn100x"
+  "tca200x"
 )
 IDX=0
 
@@ -36,6 +37,9 @@ case ${target} in
     ;;
   5)
     . setup-${SETUP_LIST[5]}.sh
+    ;;
+  6)
+    . setup-${SETUP_LIST[6]}.sh
     ;;
   *)
     echo "Invalid Value"
