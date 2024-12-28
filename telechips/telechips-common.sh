@@ -186,7 +186,7 @@ setup_mkmmc() {
       echo "./tools/mktcimg/mktcimg --parttype gpt --storage_size 7818182656 --fplist tools/mktcimg/gpt_partition.list --outfile SD_Data.fai --area_name 'SD Data' --gptfile SD_Data.gpt" >> ${pref}/mksh_emmc_${ver}.sh
       ;;
     tcc803x)
-      echo "./tools/mktcimg/mktcimg --parttype gpt --storage_size 7818182656 --fplist tools/mktcimg/gpt_partition.list --outfile SD_Data.fai --area_name 'SD Data' --gptfile SD_Data.gpt" >> ${pref}/mksh_emmc_${ver}.sh
+      echo "./tools/mktcimg/mktcimg --parttype gpt --storage_size 6744440832 --fplist tools/mktcimg/gpt_partition.list --outfile SD_Data.fai --area_name 'SD Data' --gptfile SD_Data.gpt" >> ${pref}/mksh_emmc_${ver}.sh
       ;;
     tcc805x)
       echo "./tools/mktcimg/mktcimg --parttype gpt --storage_size 7818182656 --fplist tools/mktcimg/gpt_partition.list --outfile SD_Data.fai --area_name 'SD Data' --gptfile SD_Data.gpt" >> ${pref}/mksh_emmc_${ver}.sh
