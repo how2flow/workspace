@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# written by steve.jeong <steve.jeong@telechips.com>
+
+. telechips-common.sh
+
+board_idx=0
+
+echo "update target board gpt-partitions"
+for list in ${setup_list[@]}; do
+  echo "[${board_idx}] ${list}"
+  board_idx=$((${board_idx} + 1))
+done
+
+read -p "select target board: " target
+
+case ${target} in
+  0)
+    echo "Canceled"
+    ;;
+  *)
+    . gpt/updategpt-${setup_list[${target}]}.sh
+    ;;
+esac

@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# written by steve.jeong <steve.jeong@telechips.com>
+
+. telechips-common.sh
+
+board_idx=0
+
+echo "setup target board workspace"
+for list in ${setup_list[@]}; do
+  echo "[${board_idx}] ${list}"
+  board_idx=$((${board_idx} + 1))
+done
+
+read -p "select target board: " target
+
+case ${target} in
+  0)
+    echo "Canceled"
+    ;;
+  *)
+    . telechips-boards.sh ${setup_list[${target}]}
+    ;;
+esac
