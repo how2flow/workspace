@@ -6,7 +6,7 @@ $directoryPath = "Z:\work1\tca200x\boot-firmware"
 
 # Search for all files ending with fwdn.json and boot.json
 $fwdnFiles = Get-ChildItem -Path $directoryPath -Filter "tca200x_fwdn.json"
-$bootFiles = Get-ChildItem -Path $directoryPath -Filter "tca200x_boot.json"
+$bootFiles = Get-ChildItem -Path $directoryPath -Filter "tca200x_ufs_boot.json"
 
 # Add the new command to write the tca200x_snor.rom file
 $snorFile = "$directoryPath\prebuilt\tca200x_snor.rom"
