@@ -1,12 +1,14 @@
 # Define the path to fwdn.exe
+# When running the script,
+# the fwdn executable must exist in the same path as the script.
 $fwdnExecutable = ".\fwdn.exe"
 
 # Define the directory path
 $directoryPath = "Z:\work1\tcc805x\boot-firmware"
 
 # Search for all files ending with fwdn.json and boot.json
-$fwdnFiles = Get-ChildItem -Path $directoryPath -Filter "*805*fwdn.json"
-$bootFiles = Get-ChildItem -Path $directoryPath -Filter "*805*boot.json"
+$fwdnFiles = Get-ChildItem -Path $directoryPath -Filter "tcc805x_fwdn.cs.json"
+$bootFiles = Get-ChildItem -Path $directoryPath -Filter "tcc805x_boot.cs.json"
 
 # Execute fwdn.json files
 foreach ($file in $fwdnFiles) {

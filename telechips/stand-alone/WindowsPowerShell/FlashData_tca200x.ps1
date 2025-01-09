@@ -1,4 +1,6 @@
 # Define the path to fwdn.exe
+# When running the script,
+# the fwdn executable must exist in the same path as the script.
 $fwdnExecutable = ".\fwdn.exe"
 
 # Define the directory path
