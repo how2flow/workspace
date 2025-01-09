@@ -132,6 +132,14 @@ set_prefix() {
   echo ${prefix[@]}
 }
 
+setup_fwdn() {
+  local git_fwdn="ssh://git@bitbucket.telechips.com:7999/tool/fwdn-v8"
+
+  if [ ! -d ${top}/fwdn-v8 ]; then
+    git clone ${git_fwdn}.git -b dev ${top}/fwdn-v8
+  fi
+}
+
 setup_bootfirmware() {
   local board=$1
   local -n kernels=$2

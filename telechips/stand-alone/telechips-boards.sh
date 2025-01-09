@@ -16,6 +16,7 @@ for path in ${prefix[@]}; do
   mkdir -p ${path}
 done
 
+setup_fwdn
 pre_process ${board} k_vers
 setup_bootfirmware ${board} k_vers
 setup_prev_bl3n ${board}
