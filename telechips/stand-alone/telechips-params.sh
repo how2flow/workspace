@@ -13,6 +13,7 @@ setup_list=(
   "tcc803x"
   "tcc805x"
   "tcc807x"
+  "tcc750x"
   "tcn100x"
   "tca200x"
 )

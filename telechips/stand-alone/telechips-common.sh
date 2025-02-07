@@ -181,7 +181,7 @@ setup_envscript() {
         mklinux=mklinuxmtdimg_64bit.sh
       fi
       ;;
-    tcc805x|tcc807x)
+    tcc750x|tcc805x|tcc807x)
       arch=arm64
       cc=aarch64-none-linux-gnu-
       mklinux=mklinuxmtdimg_64bit.sh
@@ -248,7 +248,7 @@ setup_prev_bl3n() {
   local git_fw="ssh://git@bitbucket.telechips.com:7999/firmware"
 
   case ${board} in
-  tcc803x)
+  tcc803x|tcc750x|tca200x)
     git clone ${git_fw}/trusted-firmware-a.git -b ${board} ${top}/${board}/tf-a
     ;;
   tcc805x)
@@ -261,9 +261,6 @@ setup_prev_bl3n() {
     ;;
   tcn100x)
     git clone ${git_fw}/sram-boot.git -b BL1-TCN100X ${top}/${board}/sram-boot
-    git clone ${git_fw}/trusted-firmware-a.git -b ${board} ${top}/${board}/tf-a
-    ;;
-  tca200x)
     git clone ${git_fw}/trusted-firmware-a.git -b ${board} ${top}/${board}/tf-a
     ;;
   *)
@@ -290,6 +287,9 @@ setup_mkmmc() {
       make_mksh_mmc ${path} mksh_emmc_${ver}.sh 7818182656
       ;;
     tcc807x)
+      make_mksh_mmc ${path} mksh_emmc_${ver}.sh 31268536320
+      ;;
+    tcc750x)
       make_mksh_mmc ${path} mksh_emmc_${ver}.sh 31268536320
       ;;
     tcn100x)
