@@ -247,21 +247,22 @@ setup_prev_bl3n() {
   local board=$1
   local git_fw="ssh://git@bitbucket.telechips.com:7999/firmware"
 
+  if [ ${board} != "tcc897x" ]; then
+    git clone ${git_fw}/trusted-firmware-a.git -b ${board} ${top}/${board}/tf-a
+  fi
+
   case ${board} in
-  tcc803x|tcc750x|tca200x)
-    git clone ${git_fw}/trusted-firmware-a.git -b ${board} ${top}/${board}/tf-a
-    ;;
   tcc805x)
-    git clone ${git_fw}/trusted-firmware-a.git -b ${board} ${top}/${board}/tf-a
     git clone ${git_fw}/scfw.git -b ${board} ${top}/${board}/scfw
     ;;
   tcc807x)
-    git clone ${git_fw}/trusted-firmware-a.git -b ${board} ${top}/${board}/tf-a
     git clone ${git_fw}/scfw.git -b dev/${board} ${top}/${board}/scfw
     ;;
   tcn100x)
     git clone ${git_fw}/sram-boot.git -b BL1-TCN100X ${top}/${board}/sram-boot
-    git clone ${git_fw}/trusted-firmware-a.git -b ${board} ${top}/${board}/tf-a
+    ;;
+  tca200x)
+    git clone ${git_fw}/sram-boot.git -b BL1-TCA200X ${top}/${board}/sram-boot
     ;;
   *)
     echo "Error: ${board} is not supported!!"
